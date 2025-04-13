@@ -1,6 +1,4 @@
 {
-    "HomePage": {
-        "title": "Merhaba Dünya",
-        "about": "hakkımda sayfasına git"
-    }
+    "title": "Merhaba Dünya",
+    "about": "hakkımda sayfasına git"
 }
