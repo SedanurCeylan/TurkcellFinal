@@ -1,0 +1,33 @@
+$theme-colors: (
+  "primary": #3772ff,
+  "secondary": #777e90,
+  "secondary2": #b1b5c3,
+  "success": #58bd7d,
+  "warning": #fabe3c,
+  "critical": #d33535,
+  "info": #2e72d2,
+  "highlight": #1e58c8,
+  "decorative": #383fdc,
+  "onsurface": #23262f,
+  "surface": #f7f7f7,
+  "surfacemain": #ffffff,
+);
+
+$spacer: 1rem;
+
+$spacers: (
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 12px,
+  4: 16px,
+  5: 20px,
+  6: 24px,
+  7: 32px,
+  8: 40px,
+  9: 48px,
+  10: 56px,
+  11: 64px,
+);
+
+$font-main: "DM Sans", sans-serif;
