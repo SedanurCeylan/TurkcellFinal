@@ -7,7 +7,7 @@ import HomeFourth from '../molecules/HomeFourth'
 import HomeFifth from '../molecules/HomeFifth'
 import HomeSixth from '../molecules/HomeSixth'
 import HomeSeventh from '../molecules/HomeSeventh'
-import HomeEighth from '../molecules/HomeEighth'
+import EarnUp from '../molecules/EarnUp'
 
 const Home = () => {
     return (
@@ -34,7 +34,7 @@ const Home = () => {
                 <HomeSeventh />
             </PageContainer>
             <PageContainer bgColor="bg-foto">
-                <HomeEighth />
+                <EarnUp />
             </PageContainer>
 
 

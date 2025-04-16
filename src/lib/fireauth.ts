@@ -3,8 +3,12 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     User,
+    signOut,
+    reauthenticateWithCredential,
+    updatePassword,
+    EmailAuthProvider,
 } from 'firebase/auth';
-import { app } from "./firebase"
+import { app, auth } from "./firebase"
 
 export const registerUser = async (
     email: string,
@@ -34,6 +38,36 @@ export const signIn = async (
         };
     } catch (error: any) {
         console.error('Hata:', error.message);
+        throw error;
+    }
+};
+
+export const logoutUser = async () => {
+    const auth = getAuth(app);
+    try {
+        await signOut(auth);
+        console.log('Kullanıcı çıkış yaptı');
+    } catch (error) {
+        console.error('Çıkış hatası:', error);
+    }
+};
+
+
+export const changePassword = async (
+    email: string,
+    currentPassword: string,
+    newPassword: string
+) => {
+    try {
+        const user = auth.currentUser;
+        if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
+
+        const credential = EmailAuthProvider.credential(email, currentPassword);
+        await reauthenticateWithCredential(user, credential);
+
+        await updatePassword(user, newPassword);
+    } catch (error: any) {
+        console.error('Şifre değiştirme hatası:', error.code, error.message);
         throw error;
     }
 };

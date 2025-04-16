@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 const Footer = () => {
-  const t = useTranslations('');
+  const t = useTranslations();
 
   return (
     <footer className="bg-light text-dark pt-5 border-top fs-5">

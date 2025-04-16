@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import FavoriteStar from '../../components/atoms/FavoriteStar';
+import { onAuthStateChanged } from 'firebase/auth';
+
+
 
 type SortKey = 'name' | 'symbol' | 'current_price' | 'price_change_percentage_24h' | 'high_24h' | 'low_24h' | 'total_volume';
 
@@ -11,6 +17,24 @@ const MarketProduct = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortKey, setSortKey] = useState<SortKey>('current_price');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [favorites, setFavorites] = useState<string[]>([]);
+
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (currentUser) {
+                const docRef = doc(db, 'favorites', currentUser.uid);
+                const userSnap = await getDoc(docRef);
+                if (userSnap.exists()) {
+                    setFavorites(userSnap.data().coins || []);
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+
 
     useEffect(() => {
         const fetchCoins = async () => {
@@ -30,13 +54,24 @@ const MarketProduct = () => {
 
     const handleSort = (key: SortKey) => {
         if (key === sortKey) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
         } else {
             setSortKey(key);
             setSortOrder('asc');
         }
     };
 
+    const renderSortIcon = (key: SortKey) => {
+        if (key !== sortKey) {
+            return <i className="fas fa-sort fa-xs ms-1 text-secondary" />;
+        }
+
+        return (
+            <i
+                className={`fas ${sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'} fa-xs ms-1`}
+            />
+        );
+    };
     const filteredCoins = coins
         .filter(
             (coin) =>
@@ -52,8 +87,36 @@ const MarketProduct = () => {
             return 0;
         });
 
+    const toggleFavorite = async (coinId: string) => {
+        const currentUser = auth.currentUser;
+        if (!currentUser) return;
+
+        const userRef = doc(db, 'favorites', currentUser.uid);
+        const isFavorite = favorites.includes(coinId);
+
+        try {
+            const docSnap = await getDoc(userRef);
+
+            if (!docSnap.exists()) {
+                await setDoc(userRef, {
+                    coins: [coinId],
+                });
+            } else {
+                await updateDoc(userRef, {
+                    coins: isFavorite ? arrayRemove(coinId) : arrayUnion(coinId),
+                });
+            }
+
+            setFavorites((prev) =>
+                isFavorite ? prev.filter((id) => id !== coinId) : [...prev, coinId]
+            );
+        } catch (error) {
+            console.error('Favori güncellenirken hata oluştu:', error);
+        }
+    };
     return (
         <div className="container py-4">
+
             <input
                 type="text"
                 className="form-control mb-3"
@@ -63,27 +126,28 @@ const MarketProduct = () => {
             />
 
             <div className="table-responsive rounded-4 shadow-sm">
-                <table className="table table-hover">
+                <table className="table table-hover align-middle text-center">
                     <thead className="bg-light">
                         <tr>
+                            <th> </th>
                             <th>#</th>
                             <th onClick={() => handleSort('name')} role="button">
-                                {t('market_page_pair')}
+                                {t('market_page_pair')}{renderSortIcon('name')}
                             </th>
                             <th onClick={() => handleSort('current_price')} role="button">
-                                {t('market_page_last')}
+                                {t('market_page_last')}{renderSortIcon('current_price')}
                             </th>
                             <th onClick={() => handleSort('price_change_percentage_24h')} role="button">
-                                {t('market_page_change')}
+                                {t('market_page_change')}{renderSortIcon('price_change_percentage_24h')}
                             </th>
                             <th onClick={() => handleSort('high_24h')} role="button">
-                                {t('market_page_high')}
+                                {t('market_page_high')}{renderSortIcon('high_24h')}
                             </th>
                             <th onClick={() => handleSort('low_24h')} role="button">
-                                {t('market_page_low')}
+                                {t('market_page_low')}{renderSortIcon('low_24h')}
                             </th>
                             <th onClick={() => handleSort('total_volume')} role="button">
-                                {t('market_page_turnover')}
+                                {t('market_page_turnover')}{renderSortIcon('total_volume')}
                             </th>
                             <th>{t('market_page_chart')}</th>
                             <th></th>
@@ -92,7 +156,7 @@ const MarketProduct = () => {
                     <tbody>
                         {filteredCoins.length === 0 ? (
                             <tr>
-                                <td colSpan={9}>{t('market_page_no_data')}</td>
+                                <td colSpan={9} className="text-muted py-5">{t('market_page_no_data')}</td>
                             </tr>
                         ) : (
                             filteredCoins.map((coin, index) => {
@@ -101,23 +165,40 @@ const MarketProduct = () => {
 
                                 return (
                                     <tr key={coin.id} className={index === 1 ? 'bg-primary-subtle' : ''}>
-                                        <td>{index + 1}</td>
                                         <td>
-                                            <img className="me-2" src={coin.image} alt={coin.name} width={20} />
-                                            {coin.name}
-                                            <small className="text-muted">{coin.symbol.toUpperCase()}</small>
+                                            <button
+                                                onClick={() => toggleFavorite(coin.id)}
+                                                className="btn btn-link p-0 border-0"
+                                                style={{ cursor: 'pointer' }}
+                                            >
+                                                <FavoriteStar
+                                                    key={`${coin.id}-${favorites.length}`}
+                                                    coinId={coin.id}
+                                                    favorites={favorites}
+                                                />
+
+                                            </button>
                                         </td>
-                                        <td>{coin.current_price}</td>
+
+                                        <td>{index + 1}</td>
+                                        <td className="d-flex align-items-center gap-2">
+                                            <img src={coin.image} alt={coin.name} width={24} height={24} />
+                                            <div className="text-start">
+                                                <div>{coin.name}</div>
+                                                <small className="text-muted">{coin.symbol.toUpperCase()}</small>
+                                            </div>
+                                        </td>
+                                        <td>${coin.current_price}</td>
                                         <td className={change > 0 ? 'text-success' : 'text-danger'}>
                                             {change.toFixed(2)}%
                                         </td>
-                                        <td>{coin.high_24h}</td>
-                                        <td>{coin.low_24h}</td>
-                                        <td>{turnover}B (USD)</td>
+                                        <td>${coin.high_24h}</td>
+                                        <td>${coin.low_24h}</td>
+                                        <td>{turnover}B USD</td>
                                         <td>
                                             <img
                                                 src={
-                                                    coin.price_change_percentage_24h >= 0
+                                                    change >= 0
                                                         ? '/images/chartGreen.png'
                                                         : '/images/chartRed.png'
                                                 }

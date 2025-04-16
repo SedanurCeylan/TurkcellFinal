@@ -7,16 +7,16 @@ const HomeFirst = () => {
     const t = useTranslations('');
 
     return (
-        <section className='py-9'>
-            <div className="row align-items-center my-0">
+        <section className='py-9 container'>
+            <div className="row align-items-center m-0">
 
                 <div className="col-12 col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
                     <h1 className="fw-bold fs-1">{t('title')}</h1>
                     <p className="mb-4">{t('description')}</p>
                     <button className="btn btn-primary mb-4">{t('mainbtn')}</button>
 
-                    <div className="d-flex flex-column align-items-center align-items-lg-start">
-                        <span className="mb-2">{t('partners')}</span>
+                    <div className="d-flex flex-column align-items-center align-items-lg-start ">
+                        <span className="mb-2 me-0">{t('partners')}</span>
                         <Image
                             src="/images/frame.svg"
                             alt="partners"

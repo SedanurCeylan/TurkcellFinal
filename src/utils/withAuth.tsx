@@ -1,28 +1,41 @@
+'use client';
 
-
-//bu sayfa kullanıcıları kısıtlayan sayfa giri yapıp yapmadığını kontrol eden bir sayfa
-'use client'
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { useTranslations } from 'next-intl';
 
-const withAuth = (WrappedComponent: any) => {
-    return function ProtectedComponent(props: any) {
+const withAuth = (Component: React.FC) => {
+    const ProtectedComponent = (props: any) => {
         const router = useRouter();
+        const [isLoading, setIsLoading] = useState(true);
+        const t = useTranslations();
 
         useEffect(() => {
             const unsubscribe = onAuthStateChanged(auth, (user) => {
                 if (!user) {
                     router.push('/login');
+                } else {
+                    setIsLoading(false);
                 }
             });
 
             return () => unsubscribe();
         }, []);
 
-        return <WrappedComponent {...props} />;
+        if (isLoading) {
+            return (
+                <div className="text-center py-10 my-10 fs-1 text-danger">
+                    {t('loading')}...
+                </div>
+            );
+        }
+
+        return <Component {...props} />;
     };
+
+    return ProtectedComponent;
 };
 
 export default withAuth;

@@ -1,14 +1,21 @@
 'use client';
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { registerSchema } from './../../../shemas/registerSchema';
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { registerUser } from '../../../lib/fireauth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
+import { useTranslations } from 'next-intl';
+import { registerSchema } from './../../../shemas/registerSchema';
+import Link from 'next/link';
+import RegisterHeader from '@/components/molecules/RegisterHeader';
+import PageContainer from '@/components/PageContainer';
+import EarnUp from '@/components/molecules/EarnUp';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
+  const t = useTranslations();
+  const router = useRouter();
   const [firebaseError, setFirebaseError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -22,17 +29,7 @@ const Register = () => {
     uidCode: '',
   };
 
-  interface RegisterFormValues {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    nickname: string;
-    country: string;
-    phone: string;
-    uidCode: string;
-  }
-
-  const handleSubmit = async (values: RegisterFormValues) => {
+  const handleSubmit = async (values: any) => {
     setFirebaseError('');
     setSuccess('');
 
@@ -40,7 +37,7 @@ const Register = () => {
       const userCredential = await registerUser(values.email, values.password);
 
       if (!userCredential || !userCredential.uid) {
-        throw new Error("Kayıt sırasında bir sorun oluştu.");
+        throw new Error(t('register_error_message'));
       }
 
       await setDoc(doc(db, 'users', userCredential.uid), {
@@ -52,125 +49,155 @@ const Register = () => {
         inviteCode: values.uidCode,
         wallet: '',
         balance: 0,
-        createdAt: serverTimestamp(),
       });
 
-      setSuccess('Kayıt başarılı ve veriler kaydedildi!');
-      console.log("User registered & Firestore updated successfully");
+      localStorage.setItem('userEmail', values.email);
+      setSuccess(t('register_success_message'));
+      router.push('/');
     } catch (error: any) {
-      setFirebaseError(error.message || "Bir hata oluştu.");
+      setFirebaseError(error.message || t('register_error_message'));
       console.error("Kayıt hatası:", error);
     }
   };
 
   return (
-    <section className="container py-5">
-      <h2 className="text-center fw-bold mb-4">Register</h2>
+    <section className="pb-5">
+      <PageContainer bgColor='bg-surface'>
+        <RegisterHeader />
+      </PageContainer>
 
-      <div className="row justify-content-center">
-        <div className="col-lg-6">
-          <h3 className="fw-semibold mb-1">Register To Rockie</h3>
-          <p className="text-muted mb-4">Register in advance and enjoy the event benefits</p>
+      <div className='container'>
+        <h2 className="text-center fw-bold mb-4 fs-1">{t('register_title')}</h2>
 
-          <Formik
-            initialValues={initialValues}
-            validationSchema={registerSchema}
-            onSubmit={handleSubmit}
-          >
-            {() => (
-              <Form>
-                <div className="mb-3 d-flex gap-2">
-                  <Field
-                    name="email"
-                    type="email"
-                    className="form-control"
-                    placeholder="Please fill in the email form"
-                  />
-                  <button type="button" className="btn btn-primary">Authenticate</button>
-                </div>
-                <ErrorMessage name="email" component="div" className="text-danger mb-2" />
+        <div className="row justify-content-center">
+          <div className="col-lg-6">
+            <p className="mb-1 text-center text-secondary fs-3 mb-4">{t('register_subtitle')}</p>
+            <div className="d-flex justify-content-center gap-3 mb-3">
+              <button className="btn rounded-5 px-4 text-white btn-primary">Email</button>
+              <button className="btn rounded-5 px-3 text-secondary border border-secondary">Mobile</button>
+            </div>
 
-                <label className="form-label">
-                  Password <span className="text-danger">(8 Or More Characters, Including Numbers And Special Characters)</span>
-                </label>
-                <div className="mb-3">
-                  <Field
-                    name="password"
-                    type="password"
-                    className="form-control"
-                    placeholder="Please enter a password"
-                  />
-                  <ErrorMessage name="password" component="div" className="text-danger" />
-                </div>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={registerSchema(t)}
+              onSubmit={handleSubmit}
+            >
+              {() => (
+                <Form>
+                  <label className="form-label fs-3 text-secondary fw-semibold">{t('register_email')}</label>
+                  <div className="mb-3 d-flex gap-2">
+                    <Field
+                      name="email"
+                      type="email"
+                      className="form-control"
+                      placeholder={t('register_email')}
+                    />
+                    <button type="button" className="btn btn-primary fw-semibold fs-4 text-white">{t('register_authentication')}</button>
+                  </div>
+                  <ErrorMessage name="email" component="div" className="text-danger mb-2" />
 
-                <div className="mb-3">
-                  <Field
-                    name="confirmPassword"
-                    type="password"
-                    className="form-control"
-                    placeholder="Please re-enter your password"
-                  />
-                  <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
-                </div>
+                  <label className="form-label fs-3 text-secondary fw-semibold">{t('register_password')}</label>
+                  <div className="mb-3">
+                    <Field
+                      name="password"
+                      type="password"
+                      className="form-control"
+                      placeholder={t('register_password')}
+                    />
+                    <ErrorMessage name="password" component="div" className="text-danger" />
+                  </div>
 
-                <label className="form-label">
-                  NickName <span className="text-danger">(Excluding Special Characters)</span>
-                </label>
-                <div className="mb-3">
-                  <Field
-                    name="nickname"
-                    type="text"
-                    className="form-control"
-                    placeholder="Enter Nickname"
-                  />
-                  <ErrorMessage name="nickname" component="div" className="text-danger" />
-                </div>
+                  <div className="mb-3">
+                    <Field
+                      name="confirmPassword"
+                      type="password"
+                      className="form-control"
+                      placeholder={t('register_confirm_password')}
+                    />
+                    <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
+                  </div>
 
-                <div className="mb-3">
-                  <Field name="country" as="select" className="form-select">
-                    <option>South Korea (+82)</option>
-                    <option>Turkey (+90)</option>
-                    <option>Germany (+49)</option>
-                    <option>USA (+1)</option>
-                  </Field>
-                  <ErrorMessage name="country" component="div" className="text-danger" />
-                </div>
+                  <label className="form-label fs-3 text-secondary fw-semibold">{t('register_nickname')}</label>
+                  <div className="mb-3">
+                    <Field
+                      name="nickname"
+                      type="text"
+                      className="form-control"
+                      placeholder={t('register_nickname')}
+                    />
+                    <ErrorMessage name="nickname" component="div" className="text-danger" />
+                  </div>
 
-                <label className="form-label">
-                  Phone <span className="text-danger">(Enter Numbers Only)</span>
-                </label>
-                <div className="mb-3">
-                  <Field
-                    name="phone"
-                    type="text"
-                    className="form-control"
-                    placeholder="0500 000 00 00"
-                  />
-                  <ErrorMessage name="phone" component="div" className="text-danger" />
-                </div>
+                  <div className="mb-3">
+                    <Field name="country" as="select" className="form-select">
+                      <option>Turkey (+90)</option>
+                      <option>USA (+1)</option>
+                      <option>United Kingdom (+44)</option>
+                      <option>Germany (+49)</option>
+                      <option>France (+33)</option>
+                      <option>Italy (+39)</option>
+                      <option>Spain (+34)</option>
+                      <option>Netherlands (+31)</option>
+                      <option>Sweden (+46)</option>
+                      <option>Norway (+47)</option>
+                      <option>Denmark (+45)</option>
+                      <option>Finland (+358)</option>
+                      <option>Poland (+48)</option>
+                      <option>Greece (+30)</option>
+                      <option>Russia (+7)</option>
+                      <option>Ukraine (+380)</option>
+                      <option>India (+91)</option>
+                      <option>Pakistan (+92)</option>
+                      <option>South Korea (+82)</option>
+                      <option>Japan (+81)</option>
+                      <option>China (+86)</option>
+                      <option>Saudi Arabia (+966)</option>
+                      <option>United Arab Emirates (+971)</option>
+                      <option>Brazil (+55)</option>
+                      <option>Argentina (+54)</option>
+                      <option>Canada (+1)</option>
+                      <option>Australia (+61)</option>
+                      <option>New Zealand (+64)</option>
+                      <option>Mexico (+52)</option>
+                      <option>South Africa (+27)</option>
+                    </Field>
+                    <ErrorMessage name="country" component="div" className="text-danger" />
+                  </div>
 
-                <div className="mb-3">
-                  <Field
-                    name="uidCode"
-                    type="text"
-                    className="form-control"
-                    placeholder="Please enter your invitation code"
-                  />
-                </div>
+                  <label className="form-label fs-3 text-secondary fw-semibold">{t('register_phone')}</label>
+                  <div className="mb-3">
+                    <Field
+                      name="phone"
+                      type="text"
+                      className="form-control"
+                      placeholder={t('register_phone')}
+                    />
+                    <ErrorMessage name="phone" component="div" className="text-danger" />
+                  </div>
 
-                {firebaseError && <p className="text-danger">{firebaseError}</p>}
-                {success && <p className="text-success">{success}</p>}
+                  <div className="mb-3">
+                    <Field
+                      name="uidCode"
+                      type="text"
+                      className="form-control"
+                      placeholder={t('register_uid_code')}
+                    />
+                  </div>
 
-                <button type="submit" className="btn btn-primary w-100">
-                  Pre-Registration
-                </button>
+                  {firebaseError && <p className="text-danger">{firebaseError}</p>}
+                  {success && <p className="text-success">{success}</p>}
 
-                <p className="text-center mt-3">
-                  Already Have An Account? <Link href="/login">Login</Link>
-                </p>
-              </Form>
-            )}
-          </Formik>
+                  <button type="submit" className="btn btn-primary w-100 fw-semibold fs-4 text-white rounded-5">
+                    {t('register_pre_registration')}
+                  </button>
+
+                  <p className="text-center mt-3">
+                    {t('register_have_account')} <Link href="/login"><b>{t('register_login')}</b></Link>
+                  </p>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     </section>
