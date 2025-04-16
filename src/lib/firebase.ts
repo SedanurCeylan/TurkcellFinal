@@ -1,7 +1,7 @@
-// src/firebase/firebase.ts
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-// import { getAnalytics } from "firebase/analytics"; // Bu genelde SSR'de kullanılmaz, istersen yorum satırı olarak bırak.
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB13P6jVzi0RriSj6LajMxcDB7z8bvVQ2E",
@@ -13,12 +13,7 @@ const firebaseConfig = {
     measurementId: "G-FZT5ECWZPX",
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 
-// Auth servisini export et
 export const auth = getAuth(app);
-
-
-
-
+export const db = getFirestore(app);

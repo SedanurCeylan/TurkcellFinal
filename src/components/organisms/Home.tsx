@@ -1,6 +1,6 @@
 import React from 'react'
 import HomeFirst from '../molecules/HomeFirst'
-import HomeSecond from '../molecules/HomeSecond'
+import HomeMarketCard from '../molecules/HomeMarketCard'
 import HomeThird from '../molecules/HomeThird'
 import PageContainer from '../PageContainer'
 import HomeFourth from '../molecules/HomeFourth'
@@ -16,7 +16,7 @@ const Home = () => {
                 <HomeFirst />
             </PageContainer>
             <PageContainer bgColor="bg-white">
-                <HomeSecond />
+                <HomeMarketCard />
             </PageContainer>
             <PageContainer bgColor="bg-light">
                 <HomeThird />

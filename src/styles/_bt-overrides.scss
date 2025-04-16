@@ -11,6 +11,7 @@ $theme-colors: (
   "onsurface": #23262f,
   "surface": #f7f7f7,
   "surfacemain": #ffffff,
+  "danger": red,
 );
 
 $spacer: 16px;
@@ -50,7 +51,10 @@ $font-sizes: (
   // 16px
   5: 0.875rem,
   // 14px
-  6: 0.75rem // 12px,,
+  6: 0.75rem,
+  // 12px,
+  32: 2rem,
+  //32px
 );
 
 // $font-weight: (
@@ -63,3 +67,7 @@ $font-sizes: (
 //   4: 400,
 //   // regular
 // );
+
+$opacity: (
+  10: 0.1,
+);

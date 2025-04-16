@@ -1,10 +1,27 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { fetchCoins } from '@/lib/coinApi';
 import Image from 'next/image';
 
-const HomeSecond = async () => {
-    const coins = await fetchCoins(4);
+const HomeSecond = () => {
+    const [coins, setCoins] = useState<any[]>([]);
+
+    useEffect(() => {
+        const getCoins = async () => {
+            try {
+                const result = await fetchCoins(4);
+                setCoins(result);
+            } catch (err) {
+                console.error('Coin verisi alınamadı:', err);
+            }
+        };
+
+        getCoins();
+    }, []);
 
     const categories = [
+
         'Crypto',
         'DeFi',
         'BSC',
@@ -29,15 +46,13 @@ const HomeSecond = async () => {
                     </button>
                 ))}
             </div>
-            <hr className='mt-0' />
+            <hr className="mt-0" />
 
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {coins.map((coin: any, index: number) => (
                     <div key={coin.id} className="col">
                         <div
-                            className={`p-4 h-100 d-flex flex-column justify-content-between ${index === 1
-                                ? 'rounded-3  shadow-lg '
-                                : 'rounded-3 bg-white'
+                            className={`p-4 h-100 d-flex flex-column justify-content-between ${index === 1 ? 'rounded-3 shadow-lg' : 'rounded-3 bg-white'
                                 }`}
                         >
                             <div className="d-flex align-items-center gap-2 mb-2">
@@ -66,7 +81,7 @@ const HomeSecond = async () => {
                     </div>
                 ))}
             </div>
-        </div >
+        </div>
     );
 };
 

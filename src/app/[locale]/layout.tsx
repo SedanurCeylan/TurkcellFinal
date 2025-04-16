@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
 import '@/styles/main.scss';
+import Footer from '@/components/Footer';
 
 
 const dmSans = DM_Sans({
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
                 <NextIntlClientProvider>
                     <Navbar lang={locale} />
                     {children}
+                    <Footer />
                 </NextIntlClientProvider>
             </body>
         </html>

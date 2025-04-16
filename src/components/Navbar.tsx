@@ -24,13 +24,11 @@ const Navbar = ({ lang }: { lang: string }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4">
       <div className="container-fluid">
-        {/* Logo ve Marka */}
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
           <Image src="/images/logo.svg" alt="Logo" width={32} height={32} className="img-fluid" />
           <strong>Rocket</strong>
         </Link>
 
-        {/* Toggler Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -43,9 +41,7 @@ const Navbar = ({ lang }: { lang: string }) => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* İçerik */}
         <div className="collapse navbar-collapse" id="mainNavbar">
-          {/* Sol Menü */}
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-lg-center gap-lg-3">
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
@@ -77,9 +73,7 @@ const Navbar = ({ lang }: { lang: string }) => {
             </li>
           </ul>
 
-          {/* Sağ Menü */}
           <div className="d-flex flex-wrap align-items-center gap-2 mt-3 mt-lg-0">
-            {/* Diller */}
             <div className="btn-group" role="group">
               <button
                 onClick={() => changeLanguage('en')}
@@ -95,7 +89,6 @@ const Navbar = ({ lang }: { lang: string }) => {
               </button>
             </div>
 
-            {/* Dropdownlar */}
             <div className="dropdown">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 {t('nav_assets')}
@@ -123,7 +116,6 @@ const Navbar = ({ lang }: { lang: string }) => {
               </ul>
             </div>
 
-            {/* Butonlar ve Avatar */}
             <button className="btn btn-link p-1">
               <Image src="/images/gunes.svg" alt="theme" width={16} height={16} />
             </button>

@@ -2,11 +2,11 @@
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { registerSchema } from './../../../shemas/registerSchema';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../lib/firebase';
-import Link from 'next/link';
 import { useState } from 'react';
-import { registerUser } from '@/lib/fireauth';
+import Link from 'next/link';
+import { registerUser } from '../../../lib/fireauth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
 
 const Register = () => {
   const [firebaseError, setFirebaseError] = useState('');
@@ -21,9 +21,15 @@ const Register = () => {
     phone: '',
     uidCode: '',
   };
+
   interface RegisterFormValues {
     email: string;
     password: string;
+    confirmPassword: string;
+    nickname: string;
+    country: string;
+    phone: string;
+    uidCode: string;
   }
 
   const handleSubmit = async (values: RegisterFormValues) => {
@@ -37,15 +43,25 @@ const Register = () => {
         throw new Error("Kayıt sırasında bir sorun oluştu.");
       }
 
-      setSuccess('Kayıt başarılı!');
-      console.log("User registered successfully");
+      await setDoc(doc(db, 'users', userCredential.uid), {
+        uid: userCredential.uid,
+        email: values.email,
+        nickname: values.nickname,
+        phone: values.phone,
+        country: values.country,
+        inviteCode: values.uidCode,
+        wallet: '',
+        balance: 0,
+        createdAt: serverTimestamp(),
+      });
+
+      setSuccess('Kayıt başarılı ve veriler kaydedildi!');
+      console.log("User registered & Firestore updated successfully");
     } catch (error: any) {
       setFirebaseError(error.message || "Bir hata oluştu.");
       console.error("Kayıt hatası:", error);
     }
   };
-
-
 
   return (
     <section className="container py-5">
