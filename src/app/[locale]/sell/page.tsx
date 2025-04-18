@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -10,11 +10,12 @@ import Link from 'next/link';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { fetchCoins } from '@/lib/coinApi';
+import { Coin, OwnedCoin } from '../../../types/route';
 
 const Sell = () => {
     const t = useTranslations();
-    const [coinList, setCoinList] = useState<any[]>([]);
-    const [walletCoins, setWalletCoins] = useState<any[]>([]);
+    const [coinList, setCoinList] = useState<Coin[]>([]);
+    const [walletCoins, setWalletCoins] = useState<OwnedCoin[]>([]);
     const [coinId, setCoinId] = useState('');
     const [amount, setAmount] = useState('');
     const [balance, setBalance] = useState(0);
@@ -23,157 +24,161 @@ const Sell = () => {
     const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
-        const fetchUserAndWallet = async () => {
-            const currentUser = auth.currentUser;
-            if (!currentUser) return;
+        const fetchData = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
 
-            setUid(currentUser.uid);
-            const docRef = doc(db, 'users', currentUser.uid);
+            const uid = user.uid;
+            setUid(uid);
+
+            const docRef = doc(db, 'users', uid);
             const snap = await getDoc(docRef);
+            const wallet = snap.data()?.wallet || {};
+            setBalance(snap.data()?.balance || 0);
 
-            const userData = snap.data();
-            setBalance(userData?.balance || 0);
-
-            const wallet = userData?.wallet || {};
-            const coins = await fetchCoins(50);
+            const coins = await fetchCoins();
             setCoinList(coins);
 
-            const owned = coins.filter(c => String(c.id) in wallet && wallet[String(c.id)]?.amount > 0);
+            const owned: OwnedCoin[] = coins
+                .filter((coin) => {
+                    const walletItem = wallet[String(coin.id)];
+                    return walletItem && walletItem.amount > 0;
+                })
+                .map((coin) => {
+                    const walletItem = wallet[String(coin.id)];
+                    return {
+                        ...coin,
+                        amount: walletItem?.amount ?? 0,
+                        priceAtPurchase: walletItem?.priceAtPurchase ?? 0,
+                    };
+                });
+
             setWalletCoins(owned);
         };
 
-        fetchUserAndWallet();
+        fetchData();
     }, []);
 
     useEffect(() => {
-        const selectedCoin = walletCoins.find(c => String(c.id) === coinId);
-        const amountNum = parseFloat(amount);
+        if (!coinId || !amount) return;
 
-        if (selectedCoin && !isNaN(amountNum) && amountNum > 0) {
-            const usdValue = amountNum * selectedCoin.quote.USD.price;
+        const selectedCoin = coinList.find((c) => String(c.id) === coinId);
+        if (selectedCoin) {
+            const price = selectedCoin.quote.USD.price;
+            const usdValue = Number(amount) * price;
             setCalculatedUSD(Number(usdValue.toFixed(2)));
-        } else {
-            setCalculatedUSD(0);
         }
-    }, [coinId, amount, walletCoins]);
+    }, [coinId, amount, coinList]);
 
     const handleSell = async () => {
-        const amountNum = parseFloat(amount);
-        if (!coinId || isNaN(amountNum) || amountNum <= 0) return alert(t('invalid_amount'));
+        if (!uid || !coinId || !amount) return;
 
-        const selectedCoin = walletCoins.find(c => String(c.id) === coinId);
-        if (!selectedCoin) return alert(t('coin_not_found'));
+        const selectedCoin = coinList.find((c) => String(c.id) === coinId);
+        if (!selectedCoin) return;
 
-        const price = selectedCoin.quote.USD.price;
-        const usdValue = amountNum * price;
-
-        const userRef = doc(db, 'users', uid);
-        const snap = await getDoc(userRef);
-        const userData = snap.data();
-        const wallet = userData?.wallet || {};
-
-        if (!wallet[coinId] || wallet[coinId].amount < amountNum) {
-            return alert(t('insufficient_coin'));
+        const coinAmountInWallet = walletCoins.find((c) => String(c.id) === coinId)?.amount || 0;
+        if (Number(amount) > coinAmountInWallet) {
+            alert(t('sell_not_enough'));
+            return;
         }
 
-        wallet[coinId].amount -= amountNum;
-        if (wallet[coinId].amount <= 0) delete wallet[coinId];
+        const docRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(docRef);
+        const userData = docSnap.data();
 
-        await updateDoc(userRef, {
-            balance: Number((balance + usdValue).toFixed(2)),
-            wallet,
+        const updatedWallet = { ...(userData?.wallet || {}) };
+        updatedWallet[coinId].amount -= Number(amount);
+        if (updatedWallet[coinId].amount <= 0) {
+            delete updatedWallet[coinId];
+        }
+
+        const usdValue = Number(amount) * selectedCoin.quote.USD.price;
+        const updatedBalance = (userData?.balance || 0) + usdValue;
+
+        await updateDoc(docRef, {
+            wallet: updatedWallet,
+            balance: updatedBalance,
         });
 
-        setBalance(prev => prev + usdValue);
-        setSuccessMessage(`${amountNum} ${selectedCoin.symbol} ${t('sold_successfully')} ($${usdValue.toFixed(2)})`);
-        setTimeout(() => setSuccessMessage(''), 4000);
+        setSuccessMessage(t('sell_success'));
         setAmount('');
         setCoinId('');
         setCalculatedUSD(0);
-
-        const updated = coinList.filter(c => String(c.id) in wallet && wallet[String(c.id)]?.amount > 0);
-        setWalletCoins(updated);
     };
 
-    const selectedWalletAmount = walletCoins.find(c => String(c.id) === coinId)?.amount;
-
     return (
-        <section>
+        <section className="mb-3">
             <PageContainer bgColor="bg-surface">
                 <SellHeader />
             </PageContainer>
 
-            <div className="container my-5">
+            <div className="container">
                 <div className="row">
                     <div className="col-md-3">
                         <div className="rounded-4 px-4 py-3 bg-light">
                             <ul className="list-group list-group-flush gap-2">
                                 <li className="list-group-item border-0 ps-3">{t('Overview')}</li>
                                 <li className="list-group-item border-0 ps-3">
-                                    <Link href="/buy" className="text-black text-decoration-none d-block">{t('buy_page_title')}</Link>
+                                    <Link href="/buy" className="text-dark text-decoration-none">
+                                        {t('buy_cripto')}
+                                    </Link>
                                 </li>
                                 <li className="list-group-item border-0 ps-3 bg-primary rounded-5 text-white">
-                                    <Link href="/sell" className="text-white text-decoration-none d-block">{t('sell_page_title')}</Link>
+                                    {t('sell_cripto')}
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <div className="col-md-9 border-start ps-4">
-                        <div className="rounded-4 p-4 shadow-sm bg-white">
-                            <h4 className="mb-4">{t('sell_crypto')}</h4>
+                    <div className="col-md-9">
+                        <div className="p-4 rounded-4 bg-light">
+                            <h2>{t('sell_cripto')}</h2>
 
-                            <div className="alert alert-info">
-                                💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
+                            <div className="mb-3">
+                                <label className="form-label">{t('select_coin')}</label>
+                                <select
+                                    className="form-select"
+                                    value={coinId}
+                                    onChange={(e) => setCoinId(e.target.value)}
+                                >
+                                    <option value="">{t('select_coin')}</option>
+                                    {walletCoins.map((coin) => (
+                                        <option key={coin.id} value={coin.id}>
+                                            {coin.name} ({coin.symbol})
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
-                            {successMessage && (
-                                <div className="alert alert-success">✅ {successMessage}</div>
+                            {coinId && (
+                                <p className="text-muted">
+                                    {t('available')}: {walletCoins.find((c) => String(c.id) === coinId)?.amount}
+                                </p>
                             )}
 
-                            <div className="row g-3">
-                                <div className="col-md-6">
-                                    <label>{t('select_coin')}</label>
-                                    <select className="form-select" value={coinId} onChange={(e) => setCoinId(e.target.value)}>
-                                        <option value="">{t('choose')}</option>
-                                        {walletCoins.map(c => (
-                                            <option key={c.id} value={c.id}>
-                                                {c.name} ({c.symbol.toUpperCase()}) - {c.quote.USD.price.toFixed(2)} USD
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="col-md-6">
-                                    <label>{t('amount')}</label>
-                                    <input
-                                        className="form-control"
-                                        type="number"
-                                        min="0"
-                                        step="any"
-                                        placeholder="0.00"
-                                        value={amount}
-                                        onChange={(e) => setAmount(e.target.value)}
-                                        max={selectedWalletAmount || ''}
-                                    />
-                                    {selectedWalletAmount !== undefined && (
-                                        <small className="text-muted">
-                                            {t('your_amount')}: {selectedWalletAmount.toFixed(6)} {walletCoins.find(c => String(c.id) === coinId)?.symbol}
-                                        </small>
-                                    )}
-                                </div>
+                            <div className="mb-3">
+                                <label className="form-label">{t('amount')}</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    placeholder="0.00"
+                                    min="0"
+                                />
                             </div>
 
                             {calculatedUSD > 0 && (
-                                <div className="mt-3 text-success">
-                                    <p><strong>{t('you_will_receive')}:</strong> ${calculatedUSD}</p>
-                                </div>
+                                <p>
+                                    {t('estimated_value')}: ${calculatedUSD.toLocaleString()}
+                                </p>
                             )}
 
-                            <div className="d-flex justify-content-end mt-4">
-                                <button className="btn btn-primary text-white rounded-5" onClick={handleSell}>
-                                    {t('sell_now')}
-                                </button>
-                            </div>
+                            <button onClick={handleSell} className="btn btn-primary mt-2">
+                                {t('sell_button')}
+                            </button>
+
+                            {successMessage && <p className="text-success mt-2">{successMessage}</p>}
                         </div>
                     </div>
                 </div>

@@ -15,8 +15,10 @@ export async function GET() {
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
+        console.error(error);
         return new Response(JSON.stringify({ error: 'Veri alınamadı' }), {
             status: 500,
         });
     }
+
 }

@@ -12,12 +12,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import EarnUp from '@/components/molecules/EarnUp';
 
+type LoginValues = {
+  email: string;
+  password: string;
+};
+
 const Login = () => {
   const t = useTranslations();
   const [firebaseError, setFirebaseError] = useState('');
   const router = useRouter();
 
-  const formik = useFormik({
+  const formik = useFormik<LoginValues>({
     initialValues: {
       email: '',
       password: '',
@@ -28,8 +33,12 @@ const Login = () => {
       try {
         await signIn(values.email, values.password);
         router.push('/');
-      } catch (error: any) {
-        setFirebaseError(error.message);
+      } catch (error) {
+        if (error instanceof Error) {
+          setFirebaseError(error.message);
+        } else {
+          setFirebaseError('Bilinmeyen bir hata oluştu.');
+        }
       } finally {
         setSubmitting(false);
       }
@@ -42,7 +51,7 @@ const Login = () => {
       formik.setFieldValue('email', savedEmail);
       localStorage.removeItem('userEmail');
     }
-  }, []);
+  }, [formik]);
 
   return (
     <section>
@@ -141,6 +150,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+
       <PageContainer bgColor="bg-foto">
         <EarnUp />
       </PageContainer>
