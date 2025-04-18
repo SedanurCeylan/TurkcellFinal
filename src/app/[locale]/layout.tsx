@@ -28,7 +28,7 @@ export default async function LocaleLayout({
         <html lang={locale}>
             <body className={dmSans.className}>
                 <NextIntlClientProvider>
-                    <Navbar lang={locale} />
+                    <Navbar />
                     {children}
                     <Footer />
                 </NextIntlClientProvider>
