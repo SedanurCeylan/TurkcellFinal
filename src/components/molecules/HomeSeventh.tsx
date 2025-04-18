@@ -35,7 +35,7 @@ const HomeSeventh = () => {
                                 <p className="text-secondary mb-0" style={{ fontSize: '14px' }}> {t('custom_comment_title')}</p>
                             </div>
                             <div className="ms-auto">
-                                <Image src="/images/customlogo.png" alt="logo" width={112} height={25} />
+                                <Image src="/customlogo.png" alt="logo" width={112} height={25} />
                             </div>
                         </div>
                         <span className="position-absolute top-0 end-0 text-primary fs-1" style={{ transform: 'translate(20%, -40%)' }}>

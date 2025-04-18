@@ -76,16 +76,16 @@ const Footer = () => {
           </p>
           <div className="d-flex gap-3">
             <a href="#">
-              <Image src="/images/facebook.svg" alt="Facebook" width={16} height={16} />
+              <Image src="/facebook.svg" alt="Facebook" width={16} height={16} />
             </a>
             <a href="#">
-              <Image src="/images/twitter.svg" alt="Twitter" width={16} height={16} />
+              <Image src="/twitter.svg" alt="Twitter" width={16} height={16} />
             </a>
             <a href="#">
-              <Image src="/images/instagram.svg" alt="Instagram" width={16} height={16} />
+              <Image src="/instagram.svg" alt="Instagram" width={16} height={16} />
             </a>
             <a href="#">
-              <Image src="/images/linkedin.svg" alt="LinkedIn" width={16} height={16} />
+              <Image src="/linkedin.svg" alt="LinkedIn" width={16} height={16} />
             </a>
           </div>
         </div>

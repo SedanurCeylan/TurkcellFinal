@@ -143,7 +143,7 @@ const Login = () => {
 
           <div className="col-lg-4 d-none d-lg-block">
             <div className="text-center">
-              <Image src="/images/qr.svg" alt="qr" width={200} height={200} />
+              <Image src="/qr.svg" alt="qr" width={200} height={200} />
               <p className="fw-semibold mt-3">{t('login_qr_code_text')}</p>
               <p className="small">{t('login_qr_code_description')}</p>
             </div>

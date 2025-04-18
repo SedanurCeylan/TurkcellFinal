@@ -18,7 +18,7 @@ const HomeFirst = () => {
                     <div className="d-flex flex-column align-items-center align-items-lg-start ">
                         <span className="mb-2 me-0">{t('partners')}</span>
                         <Image
-                            src="/images/frame.svg"
+                            src="/frame.svg"
                             alt="partners"
                             width={607}
                             height={28}

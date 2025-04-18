@@ -19,7 +19,7 @@ const MarketBanner = () => {
 
             <div className="col-lg-6 text-center">
                 <Image
-                    src="/images/market.png"
+                    src="/market.png"
                     alt="market"
                     width={478}
                     height={340}

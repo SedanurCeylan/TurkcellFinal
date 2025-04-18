@@ -16,7 +16,7 @@ const HomeFourth = () => {
                     <div className="col">
                         <div className="d-flex flex-column align-items-center h-100 px-3">
                             <Image
-                                src="/images/step1.svg"
+                                src="/step1.svg"
                                 alt="step1"
                                 width={96}
                                 height={96}
@@ -31,7 +31,7 @@ const HomeFourth = () => {
                     <div className="col">
                         <div className="d-flex flex-column align-items-center h-100 px-3">
                             <Image
-                                src="/images/step2.svg"
+                                src="/step2.svg"
                                 alt="step2"
                                 width={96}
                                 height={96}
@@ -46,7 +46,7 @@ const HomeFourth = () => {
                     <div className="col">
                         <div className="d-flex flex-column align-items-center h-100 px-3">
                             <Image
-                                src="/images/step3.svg"
+                                src="/step3.svg"
                                 alt="step3"
                                 width={96}
                                 height={96}
@@ -61,7 +61,7 @@ const HomeFourth = () => {
                     <div className="col">
                         <div className="d-flex flex-column align-items-center h-100 px-3">
                             <Image
-                                src="/images/step4.svg"
+                                src="/step4.svg"
                                 alt="step4"
                                 width={96}
                                 height={96}

@@ -16,7 +16,7 @@ const HomeSixth = () => {
 
                         <div className="mb-3">
                             <div className="d-flex align-items-center gap-2">
-                                <Image src="/images/tick.svg" alt="icon" width={20} height={20} />
+                                <Image src="/tick.svg" alt="icon" width={20} height={20} />
                                 <h6 className="mb-0 fs-2 fw-bold">{t('six_first_title')}</h6>
                             </div>
                             <p className="text-secondary fs-4">{t('six_first_desc')}</p>
@@ -24,7 +24,7 @@ const HomeSixth = () => {
 
                         <div>
                             <div className="d-flex align-items-center gap-2">
-                                <Image src="/images/tick.svg" alt="icon" width={20} height={20} />
+                                <Image src="/tick.svg" alt="icon" width={20} height={20} />
                                 <h6 className="mb-0 fs-2 fw-bold">{t('six_second_title')}</h6>
                             </div>
                             <p className="text-secondary fs-4">{t('six_second_desc')}</p>
@@ -32,7 +32,7 @@ const HomeSixth = () => {
                         <div className='d-flex gap-3 mt-4'>
                             <span>
                                 <Image
-                                    src="/images/googleplay.svg"
+                                    src="/googleplay.svg"
                                     alt="googleplay"
                                     width={135}
                                     height={40}
@@ -40,7 +40,7 @@ const HomeSixth = () => {
                             </span>
                             <span>
                                 <Image
-                                    src="/images/apstore.svg"
+                                    src="/apstore.svg"
                                     alt="apstore"
                                     width={120}
                                     height={40}
@@ -51,7 +51,7 @@ const HomeSixth = () => {
 
                     <div className="col-12 col-lg-6">
                         <Image
-                            src="/images/sixth.svg"
+                            src="/sixth.svg"
                             alt="six"
                             width={716}
                             height={540}

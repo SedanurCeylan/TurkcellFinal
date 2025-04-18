@@ -56,7 +56,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4 fixed-top">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
-          <Image src="/images/logo.svg" alt="Logo" width={32} height={32} />
+          <Image src="/logo.svg" alt="Logo" width={32} height={32} />
           <strong>Rocket</strong>
         </Link>
 
@@ -103,7 +103,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/home">
                 {t('nav_bit')}
-                <Image src="/images/bit.svg" alt="bit" width={10} height={10} />
+                <Image src="/bit.svg" alt="bit" width={10} height={10} />
               </Link>
             </li>
             <li className="nav-item dropdown">
@@ -171,7 +171,7 @@ const Navbar = () => {
             <div className="dropdown">
               <a className="d-flex align-items-center nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 <Image
-                  src="/images/avatar.jpg"
+                  src="/avatar.jpg"
                   alt="User Avatar"
                   width={32}
                   height={32}

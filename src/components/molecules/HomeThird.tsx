@@ -71,8 +71,8 @@ const HomeThird = () => {
                                     <Image
                                         src={
                                             coin.quote.USD.percent_change_24h >= 0
-                                                ? '/images/chartGreen.png'
-                                                : '/images/chartRed.png'
+                                                ? '/chartGreen.png'
+                                                : '/chartRed.png'
                                         }
                                         alt="chart"
                                         width={136}
