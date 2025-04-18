@@ -13,7 +13,7 @@ const HomeFirst = () => {
                 <div className="col-12 col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
                     <h1 className="fw-bold fs-1">{t('title')}</h1>
                     <p className="mb-4">{t('description')}</p>
-                    <button className="btn btn-primary mb-4">{t('mainbtn')}</button>
+                    <button className="btn btn-primary mb-4 rounded-5 text-white py-2 px-3">{t('mainbtn')}</button>
 
                     <div className="d-flex flex-column align-items-center align-items-lg-start ">
                         <span className="mb-2 me-0">{t('partners')}</span>

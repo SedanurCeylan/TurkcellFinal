@@ -5,6 +5,7 @@ import MarketProduct from '../../../components/molecules/MarketProduct'
 import PageContainer from '../../../components/PageContainer'
 import React from 'react'
 import HomeMarketCard from '../../../components/molecules/HomeMarketCard'
+import EarnUp from '@/components/molecules/EarnUp'
 
 const Market = () => {
   return (
@@ -17,6 +18,9 @@ const Market = () => {
       </PageContainer>
       <PageContainer bgColor="bg-light">
         <MarketProduct />
+      </PageContainer>
+      <PageContainer bgColor="bg-foto">
+        <EarnUp />
       </PageContainer>
 
     </div>

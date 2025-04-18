@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-const HomeEighth = () => {
+const EarnUp = () => {
     const t = useTranslations('');
 
     return (
@@ -13,7 +13,7 @@ const HomeEighth = () => {
                 <p className='fs-4 text-white'>{t('earnUp_desc')}</p>
             </div>
             <div>
-                <button>
+                <button className='btn btn-surface d-flex align-items-center gap-2 rounded-5'>
                     {t('earnUp_btn')}
                 </button>
             </div>
@@ -21,4 +21,4 @@ const HomeEighth = () => {
     )
 };
 
-export default HomeEighth;
+export default EarnUp;

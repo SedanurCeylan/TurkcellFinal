@@ -10,6 +10,7 @@ import PageContainer from '@/components/PageContainer';
 import LoginHeader from '@/components/molecules/LoginHeader';
 import Link from 'next/link';
 import Image from 'next/image';
+import EarnUp from '@/components/molecules/EarnUp';
 
 const Login = () => {
   const t = useTranslations();
@@ -140,6 +141,9 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <PageContainer bgColor="bg-foto">
+        <EarnUp />
+      </PageContainer>
     </section>
   );
 };

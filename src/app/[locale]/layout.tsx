@@ -1,4 +1,3 @@
-
 import { DM_Sans } from 'next/font/google';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -7,10 +6,7 @@ import Navbar from '@/components/Navbar';
 import '@/styles/main.scss';
 import Footer from '../../components/Footer';
 import Script from 'next/script';
-
-
-
-
+// import ThemeProvider from '@/components/providers/ThemeProvider'; 
 
 const dmSans = DM_Sans({
     subsets: ['latin'],
@@ -30,15 +26,14 @@ export default async function LocaleLayout({
     }
 
     return (
-
         <html lang={locale}>
-
             <body className={dmSans.className}>
                 <NextIntlClientProvider>
                     <Navbar lang={locale} />
                     {children}
                     <Footer />
                 </NextIntlClientProvider>
+
                 <Script
                     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
                     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"

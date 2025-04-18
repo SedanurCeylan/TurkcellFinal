@@ -21,5 +21,76 @@
 .cardlar {
   position: relative;
   top: -80px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); // yumuşak bir gölge
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+.cardlar button {
+  white-space: nowrap;
+}
+
+//navbar
+.navbar {
+  font-size: 0.95rem;
+
+  .navbar-nav {
+    gap: 0.75rem;
+
+    .nav-link {
+      padding: 0.5rem 1rem;
+
+      &.active,
+      &:hover {
+        color: #0d6efd;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    font-size: 0.9rem;
+  }
+
+  .btn-group {
+    flex-shrink: 0;
+  }
+
+  .btn-outline-dark {
+    white-space: nowrap;
+  }
+
+  .dropdown-toggle {
+    cursor: pointer;
+  }
+
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      margin-top: 1rem;
+    }
+
+    .d-flex.flex-wrap {
+      justify-content: start !important;
+      gap: 0.5rem !important;
+    }
+
+    .btn-group {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn {
+      flex: 1;
+    }
+
+    .nav-link,
+    .dropdown-item {
+      text-align: center;
+    }
+
+    .btn-outline-dark,
+    .btn-link,
+    .dropdown-toggle {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }

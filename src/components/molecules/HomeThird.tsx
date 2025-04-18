@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchCoins } from '../../lib/coinApi';
+import { getCoins } from '@/lib/coinApi'; // doğru fonksiyonu çağır
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
@@ -10,16 +10,16 @@ const HomeThird = () => {
     const t = useTranslations();
 
     useEffect(() => {
-        const getCoins = async () => {
+        const fetchData = async () => {
             try {
-                const result = await fetchCoins(8);
-                setCoins(result);
+                const result = await getCoins(); // sadece getCoins kullan
+                setCoins(result.slice(0, 10));   // ilk 10 coin'i al
             } catch (err) {
                 console.error('Coin verileri alınırken hata oluştu:', err);
             }
         };
 
-        getCoins();
+        fetchData();
     }, []);
 
     return (
@@ -40,18 +40,22 @@ const HomeThird = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {coins.map((coin, index) => (
+                        {Array.isArray(coins) && coins.map((coin, index) => (
                             <tr key={coin.id}>
                                 <td>{index + 1}</td>
-                                <td >
-                                    <Image
-                                        src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
-                                        alt={coin.name}
-                                        width={24}
-                                        height={24}
-                                        className="me-2"
-                                    />
-                                    <span>{coin.name} <small className="text-muted">{coin.symbol}</small></span>
+                                <td>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <Image
+                                            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
+                                            alt={coin.name}
+                                            width={24}
+                                            height={24}
+                                        />
+                                        <div>
+                                            <div>{coin.name}</div>
+                                            <small className="text-muted">{coin.symbol}</small>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>${coin.quote.USD.price.toFixed(2)}</td>
                                 <td className={coin.quote.USD.percent_change_24h >= 0 ? 'text-success' : 'text-danger'}>

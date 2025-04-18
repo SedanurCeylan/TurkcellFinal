@@ -26,7 +26,7 @@ const withAuth = (Component: React.FC) => {
 
         if (isLoading) {
             return (
-                <div className="text-center py-10 my-10 fs-1 text-danger">
+                <div className="text-center py-10 my-10 fs-1 text-black">
                     {t('loading')}...
                 </div>
             );

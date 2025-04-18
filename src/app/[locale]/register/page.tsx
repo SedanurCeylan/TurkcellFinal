@@ -47,9 +47,10 @@ const Register = () => {
         phone: values.phone,
         country: values.country,
         inviteCode: values.uidCode,
-        wallet: '',
-        balance: 0,
+        wallet: {},
+        balance: 1000,
       });
+
 
       localStorage.setItem('userEmail', values.email);
       setSuccess(t('register_success_message'));
@@ -200,6 +201,9 @@ const Register = () => {
           </div>
         </div>
       </div>
+      <PageContainer bgColor="bg-foto">
+        <EarnUp />
+      </PageContainer>
     </section>
   );
 };

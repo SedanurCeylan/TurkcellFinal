@@ -28,6 +28,8 @@ const Navbar = ({ lang }: { lang: string }) => {
     });
   };
 
+  const isActive = (path: string) => pathname === path ? 'text-primary fw-semibold' : '';
+
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -49,10 +51,10 @@ const Navbar = ({ lang }: { lang: string }) => {
   }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4">
+    <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4 fixed-top">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
-          <Image src="/images/logo.svg" alt="Logo" width={32} height={32} className="img-fluid" />
+          <Image src="/images/logo.svg" alt="Logo" width={32} height={32} />
           <strong>Rocket</strong>
         </Link>
 
@@ -61,48 +63,47 @@ const Navbar = ({ lang }: { lang: string }) => {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mainNavbar"
-          aria-controls="mainNavbar"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="mainNavbar">
+        <div className="collapse navbar-collapse w-100" id="mainNavbar">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-lg-center gap-lg-3">
+            <li className="nav-item">
+              <Link className={`nav-link ${isActive('/')}`} href="/">
+                {t('nav_homepage')}
+              </Link>
+            </li>
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                {t('nav_homepage')}
+                {t('nav_buy')}
               </a>
               <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" href="/">Homepage 1</Link></li>
-                <li><Link className="dropdown-item" href="/">Homepage 2</Link></li>
+                <li><Link className="dropdown-item" href="/buy">{t('buy_cripto')}</Link></li>
+                <li><Link className="dropdown-item" href="/sell">{t('sell_cripto')}</Link></li>
               </ul>
             </li>
-
             <li className="nav-item">
-              <Link className="nav-link" href="/trade">{t('nav_buy')}</Link>
+              <Link className={`nav-link ${isActive('/market')}`} href="/market">
+                {t('nav_market')}
+              </Link>
             </li>
-
             <li className="nav-item">
-              <Link className="nav-link" href="/market">{t('nav_market')}</Link>
+              <Link className={`nav-link ${isActive('/home')}`} href="/home">
+                {t('nav_exchange')}
+              </Link>
             </li>
-
             <li className="nav-item">
-              <Link className="nav-link" href="/home">{t('nav_exchange')}</Link>
+              <Link className={`nav-link ${isActive('/spot')}`} href="/spot">
+                {t('nav_spot')}
+              </Link>
             </li>
-
             <li className="nav-item">
-              <Link className="nav-link" href="/spot">{t('nav_spot')}</Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link d-flex align-items-center gap-1" href="/home">
+              <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/home">
                 {t('nav_bit')}
                 <Image src="/images/bit.svg" alt="bit" width={10} height={10} />
               </Link>
             </li>
-
             <li className="nav-item dropdown">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 {t('nav_pages')}
@@ -114,7 +115,7 @@ const Navbar = ({ lang }: { lang: string }) => {
             </li>
           </ul>
 
-          <div className="d-flex flex-wrap align-items-center gap-2 mt-3 mt-lg-0">
+          <div className="d-flex flex-wrap align-items-center gap-2 justify-content-end w-100 mt-3 mt-lg-0">
             <div className="btn-group" role="group">
               <button
                 onClick={() => changeLanguage('en')}
@@ -130,7 +131,7 @@ const Navbar = ({ lang }: { lang: string }) => {
               </button>
             </div>
 
-            <div className="dropdown">
+            <div className="dropdown d-none d-lg-block">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 {t('nav_assets')}
               </a>
@@ -139,7 +140,7 @@ const Navbar = ({ lang }: { lang: string }) => {
               </ul>
             </div>
 
-            <div className="dropdown">
+            <div className="dropdown d-none d-lg-block">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 {t('nav_order')}
               </a>
@@ -148,7 +149,7 @@ const Navbar = ({ lang }: { lang: string }) => {
               </ul>
             </div>
 
-            <div className="dropdown">
+            <div className="dropdown d-none d-lg-block">
               <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 EN/USD
               </a>
@@ -157,14 +158,11 @@ const Navbar = ({ lang }: { lang: string }) => {
               </ul>
             </div>
 
-            <button className="btn btn-link p-1">
-              <Image src="/images/gunes.svg" alt="theme" width={16} height={16} />
-            </button>
-            <button className="btn btn-link p-1">
-              <Image src="/images/zil.svg" alt="notification" width={16} height={16} />
-            </button>
+            <Link href="/favorites" className="btn btn-link p-1" title="Favoriler">
+              <i className="fas fa-star text-warning"></i>
+            </Link>
 
-            <button className="btn btn-outline-dark rounded-pill px-3">{t('nav_wallet')}</button>
+            <button className="btn btn-outline-dark rounded-pill px-3 d-none d-lg-block">{t('nav_wallet')}</button>
 
             <div className="dropdown">
               <a
@@ -187,13 +185,14 @@ const Navbar = ({ lang }: { lang: string }) => {
                 {user ? (
                   <>
                     <li>
-                      <span className="dropdown-item-text fw-semibold text-primary">
+                      <span className="dropdown-item-text fw-semibold text-primary text-center">
                         {nickname || 'Kullanıcı'}
                       </span>
                     </li>
                     <hr className="dropdown-divider" />
                     <li>
                       <Link className="dropdown-item" href="/profile">
+                        <i className="fas fa-user me-2"></i>
                         {t('profile')}
                       </Link>
                     </li>
@@ -205,6 +204,7 @@ const Navbar = ({ lang }: { lang: string }) => {
                         }}
                         className="dropdown-item text-danger"
                       >
+                        <i className="fas fa-sign-out-alt me-2"></i>
                         {t('logout')}
                       </button>
                     </li>
