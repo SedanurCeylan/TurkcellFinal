@@ -10,10 +10,12 @@ import Link from 'next/link';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { fetchCoins } from '@/lib/coinApi';
+import { Coin } from '../../../types/route';
+
 
 const Buy = () => {
     const t = useTranslations();
-    const [coinList, setCoinList] = useState<any[]>([]);
+    const [coinList, setCoinList] = useState<Coin[]>([]);
     const [coinId, setCoinId] = useState('');
     const [amount, setAmount] = useState('');
     const [balance, setBalance] = useState(0);

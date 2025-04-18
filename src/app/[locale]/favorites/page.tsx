@@ -7,16 +7,18 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { getFavoriteCoins } from '@/lib/coinApi';
 import withAuth from '@/utils/withAuth';
-
+import { Coin } from '../../../types/route';
 import PageContainer from '@/components/PageContainer';
 import EarnUp from '@/components/molecules/EarnUp';
 import FavoritesHeader from '@/components/molecules/FavoritesHeader';
-import Link from 'next/link';
+
+
+
 
 const FavoritesPage = () => {
     const t = useTranslations();
     const [favorites, setFavorites] = useState<string[]>([]);
-    const [coins, setCoins] = useState<any[]>([]);
+    const [coins, setCoins] = useState<Coin[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
