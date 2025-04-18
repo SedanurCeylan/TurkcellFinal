@@ -91,7 +91,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/home')}`} href="/coming-soon">
+              <Link className={`nav-link ${isActive('/home')}`} href="//coming-soon">
                 {t('nav_exchange')}
               </Link>
             </li>

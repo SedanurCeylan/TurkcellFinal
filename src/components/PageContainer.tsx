@@ -10,13 +10,12 @@ interface PageContainerProps {
 
 const PageContainer = ({ children, className = '', bgColor }: PageContainerProps) => {
     return (
-        <div className={`yüzdeyüz ${bgColor}`}>
-            <div className={`page-container ${className}`}>
+        <div className={`w-100 ${bgColor}`}>
+            <div className={`page-container px-3 px-md-4 ${className}`}>
                 {children}
             </div>
-
         </div>
-    )
+    );
 };
 
 export default PageContainer;
