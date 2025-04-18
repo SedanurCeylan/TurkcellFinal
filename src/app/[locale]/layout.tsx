@@ -6,7 +6,6 @@ import Navbar from '@/components/Navbar';
 import '@/styles/main.scss';
 import Footer from '../../components/Footer';
 import Script from 'next/script';
-// import ThemeProvider from '@/components/providers/ThemeProvider'; 
 
 const dmSans = DM_Sans({
     subsets: ['latin'],

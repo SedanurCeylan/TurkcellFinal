@@ -1,4 +1,4 @@
-// /app/api/coins/route.ts
+
 export async function GET() {
     const apiKey = process.env.NEXT_PUBLIC_CMC_API_KEY;
 

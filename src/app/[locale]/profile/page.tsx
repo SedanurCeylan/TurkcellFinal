@@ -30,7 +30,7 @@ const Profile = () => {
                 setUserData({
                     ...snap.data(),
                     email: currentUser.email ?? '',
-                } as UserData); // Zorunlu dönüşüm (firestore'dan gelen veri için)
+                } as UserData); 
             }
         };
 

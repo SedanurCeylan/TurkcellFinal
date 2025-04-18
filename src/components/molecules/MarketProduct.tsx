@@ -37,7 +37,6 @@ const MarketProduct = () => {
         fetchCoins();
     }, []);
 
-    // components/pages/MarketProduct.tsx
 
     const toggleFavorite = async (slug: string, e: React.MouseEvent) => {
         e.preventDefault();
@@ -50,7 +49,6 @@ const MarketProduct = () => {
         const isFavorite = favorites.includes(slug);
 
         try {
-            // Firebase güncelle
             const docSnap = await getDoc(userRef);
             if (!docSnap.exists()) {
                 await setDoc(userRef, { coins: [slug] });
@@ -60,7 +58,6 @@ const MarketProduct = () => {
                 });
             }
 
-            // 🔥 BURASI KRİTİK: favori anında güncellensin
             setFavorites((prevFavorites) => {
                 if (isFavorite) {
                     return prevFavorites.filter((id) => id !== slug);
@@ -91,7 +88,6 @@ const MarketProduct = () => {
                     </thead>
                     <tbody>
                         {coins.map((coin, index) => {
-                            // ✅ Buraya ekle
                             console.log('Coin:', coin.name, '| ID:', coin.id, '| Slug:', coin.slug);
 
                             return (
@@ -103,7 +99,7 @@ const MarketProduct = () => {
                                             title="Favorilere ekle / çıkar"
                                         >
                                             <FavoriteStar
-                                                key={coin.slug + favorites.join(',')} // her değişimde değişen k
+                                                key={coin.slug + favorites.join(',')}
                                                 coinId={coin.slug}
                                                 favorites={favorites}
                                             />
@@ -147,9 +143,3 @@ const MarketProduct = () => {
 
 export default withAuth(MarketProduct);
 
-
-// ✅ FavoritesPage (page.tsx)
-// (içeriği değişmeden kaldı)
-
-// ✅ coinApi.ts
-// (içeriği değişmeden kaldı)

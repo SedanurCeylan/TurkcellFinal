@@ -213,5 +213,9 @@
     "invalid_amount": "Geçersiz miktar",
     "insufficient_coin": "Yetersiz coin miktarı",
     "you_will_earn": "Elde edeceğiniz tutar",
-    "sold_successfully": "Başarıyla satıldı"
+    "sold_successfully": "Başarıyla satıldı",
+    "sell_button": " Sat",
+    "available": "Mevcut",
+    "estimated_value": "Tahmini Değer",
+    "sell_not_enough": "Yeterli coin bulunamadı"
 }

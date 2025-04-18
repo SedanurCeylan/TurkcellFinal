@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getCoins } from '@/lib/coinApi'; // doğru fonksiyonu çağır
+import { getCoins } from '@/lib/coinApi';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
@@ -12,8 +12,8 @@ const HomeThird = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getCoins(); // sadece getCoins kullan
-                setCoins(result.slice(0, 10));   // ilk 10 coin'i al
+                const result = await getCoins();
+                setCoins(result.slice(0, 10));
             } catch (err) {
                 console.error('Coin verileri alınırken hata oluştu:', err);
             }

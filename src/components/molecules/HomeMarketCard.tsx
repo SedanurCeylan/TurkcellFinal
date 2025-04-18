@@ -10,7 +10,7 @@ const HomeMarketCard = () => {
     useEffect(() => {
         const getCoins = async () => {
             try {
-                const result = await fetchCoins(4); // 🔢 Sadece 4 coin
+                const result = await fetchCoins(4);
                 setCoins(result || []);
             } catch (err) {
                 console.error('Coin verisi alınamadı:', err);

@@ -1,6 +1,6 @@
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
-    const coinSymbol = searchParams.get('coin')?.toUpperCase(); // örnek: BTC
+    const coinSymbol = searchParams.get('coin')?.toUpperCase();
 
     if (!coinSymbol) {
         return new Response('Coin symbol is required', { status: 400 });

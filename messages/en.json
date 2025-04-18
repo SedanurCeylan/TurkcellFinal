@@ -214,5 +214,9 @@
     "insufficient_coin": "Insufficient coin amount",
     "you_will_earn": "You will earn",
     "your_amount": "You own",
-    "sold_successfully": "Sold successfully"
+    "sold_successfully": "Sold successfully",
+    "sell_button": "Sell",
+    "available": "Available",
+    "estimated_value": "Estimated Value",
+    "sell_not_enough": "Not enough balance"
 }

@@ -1,10 +1,9 @@
-// lib/coinApi.ts
+
 export const fetchCoins = async (limit = 10) => {
     try {
         const res = await fetch(`/api/coins`);
         const data = await res.json();
 
-        // CMC API zaten sıralı döner, slice ile ilk X tanesini al
         return data.slice(0, limit);
     } catch (err) {
         console.error('API Route ile coin verisi alınamadı:', err);
