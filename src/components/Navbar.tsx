@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, startTransition } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -19,24 +19,30 @@ const Navbar = () => {
   const [nickname, setNickname] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
+  const isActive = (path: string) =>
+    pathname === path ? 'text-primary fw-semibold' : '';
+
   const changeLanguage = (locale: string) => {
     const segments = pathname.split('/');
     segments[1] = locale;
-
-    startTransition(() => {
-      router.push(segments.join('/'));
-    });
+    router.push(segments.join('/'));
+    closeNavbar();
   };
 
-
-  const isActive = (path: string) =>
-    pathname === path ? 'text-primary fw-semibold' : '';
+  const closeNavbar = () => {
+    const navbarCollapse = document.getElementById('mainNavbar');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      const collapseInstance = new (window as any).bootstrap.Collapse(navbarCollapse, {
+        toggle: false,
+      });
+      collapseInstance.hide();
+    }
+  };
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
       if (currentUser) {
         const docRef = doc(db, 'users', currentUser.uid);
         const userSnap = await getDoc(docRef);
@@ -55,70 +61,64 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4 fixed-top">
       <div className="container-fluid">
-        <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
+        <Link href="/" className="navbar-brand d-flex align-items-center gap-2" onClick={closeNavbar}>
           <Image src="/logo.svg" alt="Logo" width={32} height={32} />
           <strong>Rocket</strong>
         </Link>
 
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
-        >
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
           <span className="navbar-toggler-icon"></span>
         </button>
 
         <div className="collapse navbar-collapse w-100" id="mainNavbar">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-lg-center gap-lg-3">
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/')}`} href="/">
+              <Link className={`nav-link ${isActive('/')}`} href="/" onClick={closeNavbar}>
                 {t('nav_homepage')}
               </Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" onClick={closeNavbar}>
                 {t('nav_buy')}
               </a>
               <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" href="/buy">{t('buy_cripto')}</Link></li>
-                <li><Link className="dropdown-item" href="/sell">{t('sell_cripto')}</Link></li>
+                <li><Link className="dropdown-item" href="/buy" onClick={closeNavbar}>{t('buy_cripto')}</Link></li>
+                <li><Link className="dropdown-item" href="/sell" onClick={closeNavbar}>{t('sell_cripto')}</Link></li>
               </ul>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/market')}`} href="/market">
+              <Link className={`nav-link ${isActive('/market')}`} href="/market" onClick={closeNavbar}>
                 {t('nav_market')}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/home')}`} href="/home">
+              <Link className={`nav-link ${isActive('/home')}`} href="/coming-soon" onClick={closeNavbar}>
                 {t('nav_exchange')}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/spot')}`} href="/coming-soon">
+              <Link className={`nav-link ${isActive('/spot')}`} href="/coming-soon" onClick={closeNavbar}>
                 {t('nav_spot')}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/home">
+              <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/home" onClick={closeNavbar}>
                 {t('nav_bit')}
                 <Image src="/bit.svg" alt="bit" width={10} height={10} />
               </Link>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" onClick={closeNavbar}>
                 {t('nav_pages')}
               </a>
               <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" href="/about">About</Link></li>
-                <li><Link className="dropdown-item" href="/contact">Contact</Link></li>
+                <li><Link className="dropdown-item" href="/about" onClick={closeNavbar}>About</Link></li>
+                <li><Link className="dropdown-item" href="/contact" onClick={closeNavbar}>Contact</Link></li>
               </ul>
             </li>
           </ul>
 
           <div className="user-section d-flex flex-wrap align-items-center justify-content-lg-end justify-content-start gap-2 w-100 mt-3 mt-lg-0">
-
             <div className="btn-group" role="group">
               <button
                 onClick={() => changeLanguage('en')}
@@ -139,7 +139,7 @@ const Navbar = () => {
                 {t('nav_assets')}
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Assets</a></li>
+                <li><a className="dropdown-item" href="#" onClick={closeNavbar}>Assets</a></li>
               </ul>
             </div>
 
@@ -148,7 +148,7 @@ const Navbar = () => {
                 {t('nav_order')}
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Orders</a></li>
+                <li><a className="dropdown-item" href="#" onClick={closeNavbar}>Orders</a></li>
               </ul>
             </div>
 
@@ -157,11 +157,11 @@ const Navbar = () => {
                 EN/USD
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">TR/TRY</a></li>
+                <li><a className="dropdown-item" href="#" onClick={closeNavbar}>TR/TRY</a></li>
               </ul>
             </div>
 
-            <Link href="/favorites" className="btn btn-link p-1" title="Favoriler">
+            <Link href="/favorites" className="btn btn-link p-1" title="Favoriler" onClick={closeNavbar}>
               <i className="fas fa-star text-warning"></i>
             </Link>
 
@@ -190,7 +190,7 @@ const Navbar = () => {
                     </li>
                     <hr className="dropdown-divider" />
                     <li>
-                      <Link className="dropdown-item" href="/profile">
+                      <Link className="dropdown-item" href="/profile" onClick={closeNavbar}>
                         <i className="fas fa-user me-2"></i>
                         {t('profile')}
                       </Link>
@@ -200,6 +200,7 @@ const Navbar = () => {
                         onClick={async () => {
                           await logoutUser();
                           router.push('/login');
+                          closeNavbar();
                         }}
                         className="dropdown-item text-danger"
                       >
@@ -210,7 +211,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <li>
-                    <Link className="dropdown-item text-primary fw-semibold" href="/login">
+                    <Link className="dropdown-item text-primary fw-semibold" href="/login" onClick={closeNavbar}>
                       {t('login')}
                     </Link>
                   </li>
