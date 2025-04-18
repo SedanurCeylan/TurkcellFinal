@@ -222,14 +222,15 @@
     "contact_about": "İletişim",
     "about_page_title": "Hakkımızda",
     "about_page_breadcrumb": "Anasayfa / Hakkımızda",
-    "about_title_": "Biz Kimiz?",
-    "about_text": "Kripto dünyasında güvenli, hızlı ve kullanıcı dostu bir platform sunuyoruz. Amacımız, dijital varlık ticaretini herkes için erişilebilir hale getirmek.",
+    "about_title_": "Ben Kimim?",
+    "about_text": "Ben Sedanur Ceylan. 2024 yılında Süleyman Demirel Üniversitesi Bilgisayar Mühendisliği bölümünden mezun oldum. Frontend geliştirme ile ilgileniyorum. Bu projeyi, Turkcell'in 'Gençlere Yatırım Geleceğe Yazılım' 4.0 Frontend Bootcamp programının final projesi olarak, verilen Figma tasarımı doğrultusunda geliştirdim.",
     "contact_page_title": "İletişim",
     "contact_page_breadcrumb": "Anasayfa / İletişim",
-    "contact_title_contact": "Bizimle İletişime Geçin",
-    "contact_text": "Herhangi bir sorunuzda veya iş birliği teklifinizde bize ulaşmaktan çekinmeyin.",
+    "contact_title_contact": "Benimle İletişime Geçin",
+    "contact_text": "Benimle İletişime Geçebilirsiniz. Sorularınız veya önerileriniz varsa, lütfen bana ulaşın.",
     "email_contact": "E-posta",
     "phone_contact": "Telefon",
     "coming_soon_title": "Sayfa Hazırlanıyor 🚧",
-    "coming_soon_desc": "Bu sayfa üzerinde çalışmalar devam ediyor. Lütfen daha sonra tekrar kontrol edin."
+    "coming_soon_desc": "Bu sayfa üzerinde çalışmalar devam ediyor. Lütfen daha sonra tekrar kontrol edin.",
+    "about_contact": "Benim Hakkımda"
 }

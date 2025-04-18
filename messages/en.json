@@ -223,14 +223,15 @@
     "contact_about": "Contact",
     "about_page_title": "About Us",
     "about_page_breadcrumb": "Home / About",
-    "about_title_": "Who We Are?",
-    "about_text": "We provide a secure, fast, and user-friendly platform in the crypto world. Our goal is to make digital asset trading accessible to everyone.",
+    "about_title_": "Who Am I?",
+    "about_text": "I'm Sedanur Ceylan, a 2024 graduate of Süleyman Demirel University, Department of Computer Engineering. I'm interested in frontend development. I built this project as the final project of the Turkcell 'Investing in Youth, Software for the Future 4.0' Frontend Bootcamp, based on the provided Figma design.",
     "contact_page_title": "Contact",
     "contact_page_breadcrumb": "Home / Contact",
-    "contact_title_contact": "Get in Touch",
-    "contact_text": "Feel free to reach out to us for any questions or business inquiries.",
+    "contact_title_contact": "Get in Touch with Me",
+    "contact_text": "You can contact me directly. If you have any questions or suggestions, please feel free to reach out.",
     "email_contact": "Email",
     "phone_contact": "Phone",
     "coming_soon_title": "Page Coming Soon 🚧",
-    "coming_soon_desc": "We're still working on this page. Please check back again later."
+    "coming_soon_desc": "We're still working on this page. Please check back again later.",
+    "about_contact": "About Me"
 }

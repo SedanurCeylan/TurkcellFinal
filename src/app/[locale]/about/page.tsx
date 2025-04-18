@@ -24,7 +24,7 @@ const About = () => {
                             <ul className="list-group list-group-flush gap-2">
                                 <li className={`list-group-item border-0 ps-3 ${pathname === '/about' ? 'bg-primary rounded-5 text-white' : ''}`}>
                                     <Link href="/about" className="text-decoration-none d-block text-white bg-primary rounded-5 py-2 px-3">
-                                        {t('about_page')}
+                                        {t('about_contact')}
                                     </Link>
                                 </li>
                                 <li className={`list-group-item border-0 ps-3 ${pathname === '/contact' ? 'bg-primary rounded-5 text-white ' : ''}`}>
