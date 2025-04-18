@@ -158,18 +158,6 @@ const Buy = () => {
                                     {t('buy_now')}
                                 </button>
                             </div>
-
-                            {/* <div className="mt-5 p-3 border rounded-4 bg-white">
-                                <h5 className="mb-3">{t('available_coins')}</h5>
-                                <ul className="list-group list-group-flush">
-                                    {coinList.map(c => (
-                                        <li key={c.id} className="list-group-item d-flex justify-content-between">
-                                            <span>{c.name} ({c.symbol.toUpperCase()})</span>
-                                            <span>${c.quote.USD.price.toFixed(2)}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div> */}
                         </div>
                     </div>
                 </div>

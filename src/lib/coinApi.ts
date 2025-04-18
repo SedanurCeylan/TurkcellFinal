@@ -1,4 +1,4 @@
-import { Coin } from '@/types/route'; // Eğer henüz yoksa aşağıya örnek tipi ekledim
+import { Coin } from '@/types/route';
 
 export const fetchCoins = async (limit = 10): Promise<Coin[]> => {
     try {
