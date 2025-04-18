@@ -117,7 +117,8 @@ const Navbar = () => {
             </li>
           </ul>
 
-          <div className="d-flex flex-wrap align-items-center gap-2 justify-content-end w-100 mt-3 mt-lg-0">
+          <div className="user-section d-flex flex-wrap align-items-center justify-content-lg-end justify-content-start gap-2 w-100 mt-3 mt-lg-0">
+
             <div className="btn-group" role="group">
               <button
                 onClick={() => changeLanguage('en')}
