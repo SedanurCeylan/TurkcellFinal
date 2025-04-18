@@ -1,7 +1,6 @@
 
 
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 
 const EarnUp = () => {
     const t = useTranslations('');

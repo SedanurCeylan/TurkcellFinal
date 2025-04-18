@@ -1,7 +1,6 @@
 import * as Yup from 'yup';
-import { useTranslations } from 'next-intl';
 
-export const registerSchema = (t: any) =>
+export const registerSchema = (t: (key: string) => string) =>
     Yup.object({
         email: Yup.string()
             .email(t('register_email_invalid'))

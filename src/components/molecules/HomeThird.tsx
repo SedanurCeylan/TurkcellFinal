@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { getCoins } from '@/lib/coinApi';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { Coin } from '@/types/route';
 
 const HomeThird = () => {
-    const [coins, setCoins] = useState<any[]>([]);
+    const [coins, setCoins] = useState<Coin[]>([]);
     const t = useTranslations();
 
     useEffect(() => {
@@ -14,8 +15,12 @@ const HomeThird = () => {
             try {
                 const result = await getCoins();
                 setCoins(result.slice(0, 10));
-            } catch (err) {
-                console.error('Coin verileri alınırken hata oluştu:', err);
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    console.error('Coin verileri alınırken hata oluştu:', err.message);
+                } else {
+                    console.error('Coin verileri alınırken bilinmeyen bir hata oluştu.');
+                }
             }
         };
 
@@ -40,7 +45,7 @@ const HomeThird = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(coins) && coins.map((coin, index) => (
+                        {coins.map((coin, index) => (
                             <tr key={coin.id}>
                                 <td>{index + 1}</td>
                                 <td>

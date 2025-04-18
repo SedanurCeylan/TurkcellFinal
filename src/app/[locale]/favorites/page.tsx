@@ -83,21 +83,21 @@ const FavoritesPage = () => {
         }
     };
 
-    const handleAddFavorite = async (slug: string) => {
-        const currentUser = auth.currentUser;
-        if (!currentUser) return;
+    // const handleAddFavorite = async (slug: string) => {
+    //     const currentUser = auth.currentUser;
+    //     if (!currentUser) return;
 
-        try {
-            const userRef = doc(db, 'favorites', currentUser.uid);
-            await updateDoc(userRef, {
-                coins: arrayUnion(slug),
-            });
+    //     try {
+    //         const userRef = doc(db, 'favorites', currentUser.uid);
+    //         await updateDoc(userRef, {
+    //             coins: arrayUnion(slug),
+    //         });
 
-            setFavorites((prev) => [...prev, slug]);
-        } catch (err) {
-            console.error('Favoriye eklenemedi:', err);
-        }
-    };
+    //         setFavorites((prev) => [...prev, slug]);
+    //     } catch (err) {
+    //         console.error('Favoriye eklenemedi:', err);
+    //     }
+    // };
 
     if (loading) return <div>{t('loading')}...</div>;
 

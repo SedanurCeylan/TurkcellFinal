@@ -9,8 +9,13 @@ export const changePassword = async (newPassword: string) => {
     try {
         await updatePassword(user, newPassword);
         console.log("Şifre başarıyla değiştirildi.");
-    } catch (error: any) {
-        console.error("Şifre değiştirme hatası:", error.message);
-        throw error;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("Şifre değiştirme hatası:", error.message);
+            throw error;
+        } else {
+            console.error("Bilinmeyen bir hata oluştu.");
+            throw new Error("Bilinmeyen hata");
+        }
     }
 };

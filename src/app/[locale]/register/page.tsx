@@ -1,17 +1,18 @@
 'use client';
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { registerUser } from '../../../lib/fireauth';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { useTranslations } from 'next-intl';
-import { registerSchema } from './../../../shemas/registerSchema';
+import { registerSchema } from '../../../shemas/registerSchema';
 import Link from 'next/link';
 import RegisterHeader from '@/components/molecules/RegisterHeader';
 import PageContainer from '@/components/PageContainer';
 import EarnUp from '@/components/molecules/EarnUp';
 import { useRouter } from 'next/navigation';
+import { RegisterFormValues } from "../../../types/forms";
 
 const Register = () => {
   const t = useTranslations();
@@ -19,7 +20,7 @@ const Register = () => {
   const [firebaseError, setFirebaseError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const initialValues = {
+  const initialValues: RegisterFormValues = {
     email: '',
     password: '',
     confirmPassword: '',
@@ -29,7 +30,7 @@ const Register = () => {
     uidCode: '',
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: RegisterFormValues) => {
     setFirebaseError('');
     setSuccess('');
 
@@ -51,28 +52,32 @@ const Register = () => {
         balance: 1000,
       });
 
-
       localStorage.setItem('userEmail', values.email);
       setSuccess(t('register_success_message'));
       router.push('/');
-    } catch (error: any) {
-      setFirebaseError(error.message || t('register_error_message'));
-      console.error("Kayıt hatası:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setFirebaseError(error.message || t('register_error_message'));
+      } else {
+        setFirebaseError(t('register_error_message'));
+      }
+      console.error('Kayıt hatası:', error);
     }
   };
 
   return (
     <section className="pb-5">
-      <PageContainer bgColor='bg-surface'>
+      <PageContainer bgColor="bg-surface">
         <RegisterHeader />
       </PageContainer>
 
-      <div className='container'>
+      <div className="container">
         <h2 className="text-center fw-bold mb-4 fs-1">{t('register_title')}</h2>
 
         <div className="row justify-content-center">
           <div className="col-lg-6">
             <p className="mb-1 text-center text-secondary fs-3 mb-4">{t('register_subtitle')}</p>
+
             <div className="d-flex justify-content-center gap-3 mb-3">
               <button className="btn rounded-5 px-4 text-white btn-primary">Email</button>
               <button className="btn rounded-5 px-3 text-secondary border border-secondary">Mobile</button>
@@ -201,6 +206,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+
       <PageContainer bgColor="bg-foto">
         <EarnUp />
       </PageContainer>

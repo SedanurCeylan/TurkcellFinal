@@ -8,7 +8,7 @@ import {
     updatePassword,
     EmailAuthProvider,
 } from 'firebase/auth';
-import { app, auth } from "./firebase"
+import { app, auth } from './firebase';
 
 export const registerUser = async (
     email: string,
@@ -18,8 +18,10 @@ export const registerUser = async (
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         return userCredential.user;
-    } catch (error: any) {
-        console.error('Hata:', error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Hata:', error.message);
+        }
         throw error;
     }
 };
@@ -36,8 +38,10 @@ export const signIn = async (
             uid: userCredential.user.uid,
             email: userCredential.user.email,
         };
-    } catch (error: any) {
-        console.error('Hata:', error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Hata:', error.message);
+        }
         throw error;
     }
 };
@@ -47,11 +51,12 @@ export const logoutUser = async () => {
     try {
         await signOut(auth);
         console.log('Kullanıcı çıkış yaptı');
-    } catch (error) {
-        console.error('Çıkış hatası:', error);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Çıkış hatası:', error.message);
+        }
     }
 };
-
 
 export const changePassword = async (
     email: string,
@@ -66,8 +71,10 @@ export const changePassword = async (
         await reauthenticateWithCredential(user, credential);
 
         await updatePassword(user, newPassword);
-    } catch (error: any) {
-        console.error('Şifre değiştirme hatası:', error.code, error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Şifre değiştirme hatası:', error.message);
+        }
         throw error;
     }
 };

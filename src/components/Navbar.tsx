@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { logoutUser } from '@/lib/fireauth';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -17,7 +17,7 @@ const Navbar = ({ lang }: { lang: string }) => {
   const currentLocale = useLocale();
 
   const [nickname, setNickname] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const changeLanguage = (locale: string) => {
     const segments = pathname.split('/');
@@ -28,7 +28,8 @@ const Navbar = ({ lang }: { lang: string }) => {
     });
   };
 
-  const isActive = (path: string) => pathname === path ? 'text-primary fw-semibold' : '';
+  const isActive = (path: string) =>
+    pathname === path ? 'text-primary fw-semibold' : '';
 
   useEffect(() => {
     const auth = getAuth();
@@ -162,16 +163,12 @@ const Navbar = ({ lang }: { lang: string }) => {
               <i className="fas fa-star text-warning"></i>
             </Link>
 
-            <button className="btn btn-outline-dark rounded-pill px-3 d-none d-lg-block">{t('nav_wallet')}</button>
+            <button className="btn btn-outline-dark rounded-pill px-3 d-none d-lg-block">
+              {t('nav_wallet')}
+            </button>
 
             <div className="dropdown">
-              <a
-                className="d-flex align-items-center nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+              <a className="d-flex align-items-center nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                 <Image
                   src="/images/avatar.jpg"
                   alt="User Avatar"
