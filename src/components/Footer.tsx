@@ -8,10 +8,10 @@ const Footer = () => {
 
   return (
     <footer className="bg-light text-dark pt-5 border-top fs-5">
-      <div className="container">
-        <div className="row gy-4">
+      <div className="container-fluid px-3 px-md-4">
+        <div className="row gy-4 text-center text-md-start">
           <div className="col-12 col-md-4">
-            <div className="d-flex align-items-center gap-2 mb-3">
+            <div className="d-flex justify-content-center justify-content-md-start align-items-center gap-2 mb-3">
               <span style={{ fontSize: '1.5rem' }}>🔷</span>
               <span className="h5 mb-0 text-onsurface fs-32 fw-bold">Rocket</span>
             </div>
@@ -70,11 +70,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center border-top py-4 mt-4">
-          <p className="mb-2 mb-md-0 text-muted small">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center border-top py-4 mt-4 text-center text-md-start">
+          <p className="mb-3 mb-md-0 text-muted small w-100">
             {t('copyright')}
           </p>
-          <div className="d-flex gap-3">
+          <div className="d-flex justify-content-center justify-content-md-end gap-3 w-100">
             <a href="#">
               <Image src="/facebook.svg" alt="Facebook" width={16} height={16} />
             </a>
