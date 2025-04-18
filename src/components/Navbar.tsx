@@ -10,7 +10,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-const Navbar = ({ lang }: { lang: string }) => {
+const Navbar = () => {
   const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
@@ -27,6 +27,7 @@ const Navbar = ({ lang }: { lang: string }) => {
       router.push(segments.join('/'));
     });
   };
+
 
   const isActive = (path: string) =>
     pathname === path ? 'text-primary fw-semibold' : '';

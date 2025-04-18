@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '@/lib/firebase';
-import { doc, getDoc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { getFavoriteCoins } from '@/lib/coinApi';
