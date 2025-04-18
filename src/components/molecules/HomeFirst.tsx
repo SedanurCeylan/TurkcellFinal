@@ -29,7 +29,7 @@ const HomeFirst = () => {
 
                 <div className="col-12 col-lg-6 text-center">
                     <Image
-                        src="/images/img1.svg"
+                        src="/img1.svg"
                         alt="rocket"
                         width={570}
                         height={448}
