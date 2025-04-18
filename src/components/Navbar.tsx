@@ -91,17 +91,17 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/home')}`} href="/home">
+              <Link className={`nav-link ${isActive('/home')}`} href="/coming-soon">
                 {t('nav_exchange')}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/spot')}`} href="/spot">
+              <Link className={`nav-link ${isActive('/spot')}`} href="/coming-soon">
                 {t('nav_spot')}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/home">
+              <Link className={`nav-link d-flex align-items-center gap-1 ${isActive('/home')}`} href="/coming-soon">
                 {t('nav_bit')}
                 <Image src="/bit.svg" alt="bit" width={10} height={10} />
               </Link>

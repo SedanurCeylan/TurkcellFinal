@@ -218,5 +218,19 @@
     "sell_button": "Sell",
     "available": "Available",
     "estimated_value": "Estimated Value",
-    "sell_not_enough": "Not enough balance"
+    "sell_not_enough": "Not enough balance",
+    "about_page": "About",
+    "contact_about": "Contact",
+    "about_page_title": "About Us",
+    "about_page_breadcrumb": "Home / About",
+    "about_title_": "Who We Are?",
+    "about_text": "We provide a secure, fast, and user-friendly platform in the crypto world. Our goal is to make digital asset trading accessible to everyone.",
+    "contact_page_title": "Contact",
+    "contact_page_breadcrumb": "Home / Contact",
+    "contact_title_contact": "Get in Touch",
+    "contact_text": "Feel free to reach out to us for any questions or business inquiries.",
+    "email_contact": "Email",
+    "phone_contact": "Phone",
+    "coming_soon_title": "Page Coming Soon 🚧",
+    "coming_soon_desc": "We're still working on this page. Please check back again later."
 }

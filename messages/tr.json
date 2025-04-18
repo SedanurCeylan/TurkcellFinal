@@ -217,5 +217,19 @@
     "sell_button": " Sat",
     "available": "Mevcut",
     "estimated_value": "Tahmini Değer",
-    "sell_not_enough": "Yeterli coin bulunamadı"
+    "sell_not_enough": "Yeterli coin bulunamadı",
+    "about_page": "Hakkımızda",
+    "contact_about": "İletişim",
+    "about_page_title": "Hakkımızda",
+    "about_page_breadcrumb": "Anasayfa / Hakkımızda",
+    "about_title_": "Biz Kimiz?",
+    "about_text": "Kripto dünyasında güvenli, hızlı ve kullanıcı dostu bir platform sunuyoruz. Amacımız, dijital varlık ticaretini herkes için erişilebilir hale getirmek.",
+    "contact_page_title": "İletişim",
+    "contact_page_breadcrumb": "Anasayfa / İletişim",
+    "contact_title_contact": "Bizimle İletişime Geçin",
+    "contact_text": "Herhangi bir sorunuzda veya iş birliği teklifinizde bize ulaşmaktan çekinmeyin.",
+    "email_contact": "E-posta",
+    "phone_contact": "Telefon",
+    "coming_soon_title": "Sayfa Hazırlanıyor 🚧",
+    "coming_soon_desc": "Bu sayfa üzerinde çalışmalar devam ediyor. Lütfen daha sonra tekrar kontrol edin."
 }
