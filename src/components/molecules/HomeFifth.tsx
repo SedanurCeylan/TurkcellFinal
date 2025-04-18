@@ -13,7 +13,7 @@ const HomeFifth = () => {
 
                     <div className="col-12 col-lg-6">
                         <Image
-                            src="/images/rockie.png"
+                            src="/rockie.png"
                             alt="rockie"
                             width={300}
                             height={300}
@@ -29,7 +29,7 @@ const HomeFifth = () => {
 
                         <div className="mb-3">
                             <div className="d-flex align-items-center gap-2">
-                                <Image src="/images/tick.svg" alt="icon" width={20} height={20} />
+                                <Image src="/tick.svg" alt="icon" width={20} height={20} />
                                 <h6 className="mb-0">{t('rockie_first_title')}</h6>
                             </div>
                             <p className="text-secondary">{t('rockie_first_desc')}</p>
@@ -37,7 +37,7 @@ const HomeFifth = () => {
 
                         <div>
                             <div className="d-flex align-items-center gap-2">
-                                <Image src="/images/tick.svg" alt="icon" width={20} height={20} />
+                                <Image src="/tick.svg" alt="icon" width={20} height={20} />
                                 <h6 className="mb-0">{t('rockie_second_title')}</h6>
                             </div>
                             <p className="text-secondary">{t('rockie_second_desc')}</p>
