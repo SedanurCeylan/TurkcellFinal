@@ -11,6 +11,7 @@ import PageContainer from '@/components/PageContainer';
 import EarnUp from '@/components/molecules/EarnUp';
 import ProfileHeader from '@/components/molecules/ProfileHeader';
 import { UserData, PasswordChangeValues } from '../../../types/route';
+import Navbar from '../../../components/Navbar';
 
 const Profile = () => {
     const [userData, setUserData] = useState<UserData | null>(null);
@@ -30,7 +31,7 @@ const Profile = () => {
                 setUserData({
                     ...snap.data(),
                     email: currentUser.email ?? '',
-                } as UserData); 
+                } as UserData);
             }
         };
 
@@ -64,6 +65,7 @@ const Profile = () => {
 
     return (
         <section className='mb-3'>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <ProfileHeader />
             </PageContainer>

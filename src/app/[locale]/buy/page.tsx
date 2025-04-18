@@ -11,6 +11,7 @@ import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { fetchCoins } from '@/lib/coinApi';
 import { Coin } from '../../../types/route';
+import Navbar from '../../../components/Navbar';
 
 
 const Buy = () => {
@@ -96,6 +97,7 @@ const Buy = () => {
 
     return (
         <section>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <BuyHeader />
             </PageContainer>

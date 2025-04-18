@@ -13,6 +13,7 @@ import PageContainer from '@/components/PageContainer';
 import EarnUp from '@/components/molecules/EarnUp';
 import { useRouter } from 'next/navigation';
 import { RegisterFormValues } from "../../../types/forms";
+import Navbar from '../../../components/Navbar';
 
 const Register = () => {
   const t = useTranslations();
@@ -67,6 +68,7 @@ const Register = () => {
 
   return (
     <section className="pb-5">
+      <Navbar />
       <PageContainer bgColor="bg-surface">
         <RegisterHeader />
       </PageContainer>

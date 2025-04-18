@@ -11,6 +11,7 @@ import { Coin } from '../../../types/route';
 import PageContainer from '@/components/PageContainer';
 import EarnUp from '@/components/molecules/EarnUp';
 import FavoritesHeader from '@/components/molecules/FavoritesHeader';
+import Navbar from '../../../components/Navbar';
 
 
 
@@ -83,26 +84,11 @@ const FavoritesPage = () => {
         }
     };
 
-    // const handleAddFavorite = async (slug: string) => {
-    //     const currentUser = auth.currentUser;
-    //     if (!currentUser) return;
-
-    //     try {
-    //         const userRef = doc(db, 'favorites', currentUser.uid);
-    //         await updateDoc(userRef, {
-    //             coins: arrayUnion(slug),
-    //         });
-
-    //         setFavorites((prev) => [...prev, slug]);
-    //     } catch (err) {
-    //         console.error('Favoriye eklenemedi:', err);
-    //     }
-    // };
-
     if (loading) return <div>{t('loading')}...</div>;
 
     return (
         <section>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <FavoritesHeader />
             </PageContainer>

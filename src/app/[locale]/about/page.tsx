@@ -6,6 +6,7 @@ import EarnUp from '@/components/molecules/EarnUp';
 import AboutHeader from '@/components/molecules/AboutHeader';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Navbar from '../../../components/Navbar';
 
 const About = () => {
     const t = useTranslations();
@@ -13,6 +14,7 @@ const About = () => {
 
     return (
         <section>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <AboutHeader />
             </PageContainer>

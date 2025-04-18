@@ -11,6 +11,7 @@ import LoginHeader from '@/components/molecules/LoginHeader';
 import Link from 'next/link';
 import Image from 'next/image';
 import EarnUp from '@/components/molecules/EarnUp';
+import Navbar from '../../../components/Navbar';
 
 type LoginValues = {
   email: string;
@@ -55,6 +56,7 @@ const Login = () => {
 
   return (
     <section>
+      <Navbar />
       <PageContainer bgColor="bg-surface">
         <LoginHeader />
       </PageContainer>

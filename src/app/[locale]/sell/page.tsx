@@ -11,6 +11,7 @@ import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { fetchCoins } from '@/lib/coinApi';
 import { Coin, OwnedCoin } from '../../../types/route';
+import Navbar from '../../../components/Navbar';
 
 const Sell = () => {
     const t = useTranslations();
@@ -111,6 +112,7 @@ const Sell = () => {
 
     return (
         <section>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <SellHeader />
             </PageContainer>

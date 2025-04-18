@@ -6,10 +6,12 @@ import PageContainer from '../../../components/PageContainer'
 import React from 'react'
 import HomeMarketCard from '../../../components/molecules/HomeMarketCard'
 import EarnUp from '@/components/molecules/EarnUp'
+import Navbar from '../../../components/Navbar';
 
 const Market = () => {
   return (
     <div>
+      <Navbar />
       <PageContainer bgColor="bg-primary bg-opacity-10">
         <MarketBanner />
       </PageContainer>

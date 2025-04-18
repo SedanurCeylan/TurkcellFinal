@@ -7,6 +7,7 @@ import ContactHeader from '@/components/molecules/ContactHeader';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import Navbar from '../../../components/Navbar';
 
 const Contact = () => {
     const t = useTranslations();
@@ -14,6 +15,7 @@ const Contact = () => {
 
     return (
         <section>
+            <Navbar />
             <PageContainer bgColor="bg-surface">
                 <ContactHeader />
             </PageContainer>
