@@ -234,5 +234,8 @@
     "coming_soon_title": "Page Coming Soon 🚧",
     "coming_soon_desc": "We're still working on this page. Please check back again later.",
     "about_contact": "About Me",
-    "about_text2": "You can check out my project on GitHub:"
+    "about_text2": "You can check out my project on GitHub:",
+    "market_page_result": "results found",
+    "market_page_no_result": "No results found",
+    "search_placeholder": "Search coin..."
 }

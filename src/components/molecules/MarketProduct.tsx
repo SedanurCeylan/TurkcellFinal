@@ -10,10 +10,16 @@ import withAuth from '@/utils/withAuth';
 import { getCoins } from '@/lib/coinApi';
 import { Coin } from '@/types/route';
 
+type SortKey = 'price' | 'change' | 'name';
+
 const MarketProduct = () => {
     const t = useTranslations();
     const [coins, setCoins] = useState<Coin[]>([]);
+    const [filteredCoins, setFilteredCoins] = useState<Coin[]>([]);
     const [favorites, setFavorites] = useState<string[]>([]);
+    const [search, setSearch] = useState('');
+    const [sortKey, setSortKey] = useState<SortKey | null>(null);
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -32,9 +38,51 @@ const MarketProduct = () => {
         const fetchCoins = async () => {
             const data = await getCoins();
             setCoins(data);
+            setFilteredCoins(data);
         };
         fetchCoins();
     }, []);
+
+    useEffect(() => {
+        let filtered = coins.filter((coin) =>
+            coin.name.toLowerCase().includes(search.toLowerCase()) ||
+            coin.symbol.toLowerCase().includes(search.toLowerCase())
+        );
+
+        if (sortKey) {
+            filtered = [...filtered].sort((a, b) => {
+                let aValue: string | number;
+                let bValue: string | number;
+
+                switch (sortKey) {
+                    case 'price':
+                        aValue = a.quote.USD.price;
+                        bValue = b.quote.USD.price;
+                        break;
+                    case 'change':
+                        aValue = a.quote.USD.percent_change_24h;
+                        bValue = b.quote.USD.percent_change_24h;
+                        break;
+                    case 'name':
+                        aValue = a.name.toLowerCase();
+                        bValue = b.name.toLowerCase();
+                        break;
+                    default:
+                        return 0;
+                }
+
+                if (typeof aValue === 'string' && typeof bValue === 'string') {
+                    return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+                }
+
+                return 0;
+            });
+        }
+
+        setFilteredCoins(filtered);
+    }, [search, coins, sortKey, sortOrder]);
 
     const toggleFavorite = async (slug: string, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -70,22 +118,70 @@ const MarketProduct = () => {
         }
     };
 
+    const handleSort = (key: SortKey) => {
+        if (sortKey === key) {
+            setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortKey(key);
+            setSortOrder('asc');
+        }
+    };
+
+    const renderArrow = (key: SortKey) => {
+        return (
+            <span>
+                {sortKey === key ? (sortOrder === 'asc' ? ' ▲' : ' ▼') : ' ⇅'}
+            </span>
+        );
+    };
+
     return (
         <div className="container py-4">
+            <div className="mb-3 d-flex justify-content-end">
+                <input
+                    type="text"
+                    placeholder={t('search_placeholder')}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="form-control w-100 w-md-25"
+                />
+            </div>
+
             <div className="table-responsive rounded-4 shadow-sm">
                 <table className="table align-middle text-center mb-0 bg-white">
                     <thead className="bg-light">
                         <tr>
                             <th></th>
                             <th>#</th>
-                            <th>{t('market_page_pair')}</th>
-                            <th>{t('market_page_last')}</th>
-                            <th>{t('market_page_change')}</th>
+                            <th
+                                role="button"
+                                onClick={() => handleSort('name')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {t('market_page_pair')}
+                                {renderArrow('name')}
+                            </th>
+                            <th
+                                role="button"
+                                onClick={() => handleSort('price')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {t('market_page_last')}
+                                {renderArrow('price')}
+                            </th>
+                            <th
+                                role="button"
+                                onClick={() => handleSort('change')}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {t('market_page_change')}
+                                {renderArrow('change')}
+                            </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {coins.map((coin: Coin, index) => (
+                        {filteredCoins.map((coin: Coin, index) => (
                             <tr key={coin.id}>
                                 <td>
                                     <button

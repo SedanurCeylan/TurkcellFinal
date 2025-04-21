@@ -233,5 +233,8 @@
     "coming_soon_title": "Sayfa Hazırlanıyor 🚧",
     "coming_soon_desc": "Bu sayfa üzerinde çalışmalar devam ediyor. Lütfen daha sonra tekrar kontrol edin.",
     "about_contact": "Benim Hakkımda",
-    "about_text2": "Github Üzerinden Projemi İnceleyebilirsiniz:"
+    "about_text2": "Github Üzerinden Projemi İnceleyebilirsiniz:",
+    "market_page_result": "sonuç bulundu",
+    "market_page_no_result": "Sonuç bulunamadı",
+    "search_placeholder": "Coin ara..."
 }
