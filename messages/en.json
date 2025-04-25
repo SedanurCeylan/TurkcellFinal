@@ -249,5 +249,6 @@
     "your_coins": "Your Wallet Coins",
     "wallet_page_title": "Wallet",
     "no_coins": "No coins in your wallet yet.",
-    "wallet_page_breadcrumb": "Home / Wallet"
+    "wallet_page_breadcrumb": "Home / Wallet",
+    "success": "Success"
 }

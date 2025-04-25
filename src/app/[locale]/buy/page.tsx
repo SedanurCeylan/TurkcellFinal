@@ -21,7 +21,6 @@ const Buy = () => {
     const [balance, setBalance] = useState(0);
     const [uid, setUid] = useState('');
     const [totalPrice, setTotalPrice] = useState(0);
-    const [cart, setCart] = useState<{ id: string; name: string; symbol: string; amount: number; pricePerCoin: number }[]>([]);
     const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
@@ -48,43 +47,29 @@ const Buy = () => {
         }
     }, [coinId, coinAmount, coinList]);
 
-    const addToCart = () => {
+    const handleBuy = async () => {
         if (!coinId || !coinAmount) return alert(t('fill_all_fields'));
         const selectedCoin = coinList.find(c => String(c.id) === coinId);
         if (!selectedCoin) return alert('Coin bulunamadı');
         const amountNum = parseFloat(coinAmount);
         if (isNaN(amountNum) || amountNum <= 0) return alert(t('invalid_amount'));
-        setCart(prev => [...prev, {
-            id: String(selectedCoin.id),
-            name: selectedCoin.name,
-            symbol: selectedCoin.symbol,
-            amount: amountNum,
-            pricePerCoin: selectedCoin.quote.USD.price
-        }]);
-        setCoinId('');
-        setCoinAmount('');
-        setTotalPrice(0);
-    };
 
-    const handleCheckout = async () => {
-        if (cart.length === 0) return alert(t('cart_empty'));
-        const totalCost = cart.reduce((sum, item) => sum + (item.amount * item.pricePerCoin), 0);
+        const totalCost = amountNum * selectedCoin.quote.USD.price;
         if (totalCost > balance) return alert(t('insufficient_balance'));
+
         const userRef = doc(db, 'users', uid);
         const snap = await getDoc(userRef);
         const userData = snap.data();
         const wallet = userData?.wallet || {};
 
-        cart.forEach(item => {
-            if (wallet[item.id]) {
-                wallet[item.id].amount += item.amount;
-            } else {
-                wallet[item.id] = {
-                    amount: item.amount,
-                    priceAtPurchase: item.pricePerCoin
-                };
-            }
-        });
+        if (wallet[selectedCoin.id]) {
+            wallet[selectedCoin.id].amount += amountNum;
+        } else {
+            wallet[selectedCoin.id] = {
+                amount: amountNum,
+                priceAtPurchase: selectedCoin.quote.USD.price
+            };
+        }
 
         await updateDoc(userRef, {
             balance: Number((balance - totalCost).toFixed(2)),
@@ -92,8 +77,11 @@ const Buy = () => {
         });
 
         setBalance(prev => prev - totalCost);
-        setCart([]);
         setSuccessMessage(t('purchase_success'));
+        setCoinId('');
+        setCoinAmount('');
+        setTotalPrice(0);
+
         setTimeout(() => setSuccessMessage(''), 4000);
     };
 
@@ -125,9 +113,11 @@ const Buy = () => {
                     <div className="col-md-9 border-start ps-4">
                         <div className="rounded-4 p-4 shadow-sm bg-surface">
                             <h4 className="mb-4">{t('buy_crypto')}</h4>
+
                             <div className="alert alert-info">
                                 💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
                             </div>
+
                             {successMessage && (
                                 <div className="alert alert-success">✅ {successMessage}</div>
                             )}
@@ -150,18 +140,12 @@ const Buy = () => {
                                         className="form-control"
                                         type="number"
                                         step="0.01"
+                                        min="0"
                                         placeholder="0.00"
                                         value={coinAmount}
-                                        onChange={(e) => {
-                                            const value = parseFloat(e.target.value);
-                                            if (isNaN(value) || value < 0) {
-                                                setCoinAmount('0');
-                                            } else {
-                                                setCoinAmount(e.target.value);
-                                            }
-                                        }}
-                                    />
+                                        onChange={(e) => setCoinAmount(e.target.value)}
 
+                                    />
                                 </div>
                             </div>
 
@@ -172,28 +156,14 @@ const Buy = () => {
                             )}
 
                             <div className="d-flex justify-content-end gap-2 mt-4">
-                                <button className="btn btn-outline-primary rounded-5" onClick={addToCart}>{t('add_to_cart')}</button>
                                 <button
                                     className="btn btn-primary rounded-5 text-white"
-                                    onClick={handleCheckout}
-                                    disabled={cart.length === 0}
+                                    onClick={handleBuy}
+                                    disabled={!coinId || !coinAmount}
                                 >
-                                    {t('checkout')}
+                                    {t('buy_now')}
                                 </button>
                             </div>
-
-                            {cart.length > 0 && (
-                                <div className="mt-5">
-                                    <h5>{t('cart')}</h5>
-                                    <ul className="list-group">
-                                        {cart.map((item, idx) => (
-                                            <li key={idx} className="list-group-item d-flex justify-content-between">
-                                                {item.amount} {item.symbol} = ${(item.amount * item.pricePerCoin).toFixed(2)}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

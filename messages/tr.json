@@ -248,5 +248,6 @@
     "your_coins": "Cüzdanınızdaki Coinler",
     "wallet_page_title": "Cüzdan",
     "no_coins": "Cüzdanınızda henüz coin bulunmuyor.",
-    "wallet_page_breadcrumb": "Anasayfa / Cüzdan"
+    "wallet_page_breadcrumb": "Anasayfa / Cüzdan",
+    "success": "Başarılı"
 }

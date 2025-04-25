@@ -22,7 +22,6 @@ const Sell = () => {
     const [balance, setBalance] = useState(0);
     const [uid, setUid] = useState('');
     const [totalUSD, setTotalUSD] = useState(0);
-    const [cart, setCart] = useState<{ id: string; name: string; symbol: string; amount: number; price: number }[]>([]);
     const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
@@ -37,6 +36,7 @@ const Sell = () => {
             setBalance(snap.data()?.balance || 0);
             const coins = await fetchCoins();
             setCoinList(coins);
+
             const owned: OwnedCoin[] = coins
                 .filter((coin: Coin) => {
                     const walletItem = wallet[String(coin.id)];
@@ -50,6 +50,7 @@ const Sell = () => {
                         priceAtPurchase: walletItem?.priceAtPurchase ?? 0,
                     };
                 });
+
             setWalletCoins(owned);
         };
         fetchData();
@@ -74,59 +75,54 @@ const Sell = () => {
         }
     }, [coinId, coinAmount, coinList, walletCoins]);
 
-    const addToCart = () => {
+    const handleSell = async () => {
+        if (!coinId || !coinAmount) return alert(t('fill_all_fields'));
+
         const selectedCoin = coinList.find((c) => String(c.id) === coinId);
         const walletCoin = walletCoins.find((c) => String(c.id) === coinId);
         const amountNum = parseFloat(coinAmount);
+
         if (!selectedCoin || !walletCoin || isNaN(amountNum) || amountNum <= 0 || amountNum > walletCoin.amount) {
             alert(t('invalid_amount'));
             return;
         }
-        setCart(prev => [...prev, {
-            id: String(selectedCoin.id),
-            name: selectedCoin.name,
-            symbol: selectedCoin.symbol,
-            amount: amountNum,
-            price: selectedCoin.quote.USD.price,
-        }]);
-        setCoinId('');
-        setCoinAmount('');
-        setTotalUSD(0);
-    };
 
-    const removeFromCart = (index: number) => {
-        setCart(prev => prev.filter((_, i) => i !== index));
-    };
+        const sellValue = amountNum * selectedCoin.quote.USD.price;
 
-    const handleSellAll = async () => {
-        if (!uid || cart.length === 0) return;
         const docRef = doc(db, 'users', uid);
         const docSnap = await getDoc(docRef);
         const userData = docSnap.data();
         const updatedWallet = { ...(userData?.wallet || {}) };
-        let totalEarned = 0;
 
-        cart.forEach(item => {
-            if (!updatedWallet[item.id] || updatedWallet[item.id].amount < item.amount) return;
-            updatedWallet[item.id].amount -= item.amount;
-            totalEarned += item.amount * item.price;
-            if (updatedWallet[item.id].amount <= 0) delete updatedWallet[item.id];
-        });
+        updatedWallet[coinId].amount -= amountNum;
+        if (updatedWallet[coinId].amount <= 0) {
+            delete updatedWallet[coinId];
+        }
 
-        const updatedBalance = (userData?.balance || 0) + totalEarned;
+        const updatedBalance = (userData?.balance || 0) + sellValue;
+
         await updateDoc(docRef, {
             wallet: updatedWallet,
             balance: updatedBalance,
         });
 
-        setSuccessMessage(`${t('sold_successfully')} $${totalEarned.toFixed(2)}`);
-        setTimeout(() => setSuccessMessage(''), 4000);
-        setCart([]);
         setBalance(updatedBalance);
         setWalletCoins(prev => prev.map(c => {
-            const updated = cart.find(i => i.id === String(c.id));
-            return updated ? { ...c, amount: c.amount - updated.amount } : c;
+            if (String(c.id) === coinId) {
+                return { ...c, amount: c.amount - amountNum };
+            }
+            return c;
         }).filter(c => c.amount > 0));
+
+        setSuccessMessage(`${t('sold_successfully')} $${sellValue.toFixed(2)}`);
+
+        setTimeout(() => {
+            setSuccessMessage('');
+        }, 4000);
+
+        setCoinId('');
+        setCoinAmount('');
+        setTotalUSD(0);
     };
 
     return (
@@ -135,6 +131,7 @@ const Sell = () => {
             <PageContainer bgColor="bg-surface">
                 <SellHeader />
             </PageContainer>
+
             <div className="container mb-7">
                 <div className="row">
                     <div className="col-md-3">
@@ -152,15 +149,22 @@ const Sell = () => {
                             </ul>
                         </div>
                     </div>
+
                     <div className="col-md-9 border-start ps-4">
                         <div className="rounded-4 p-4 shadow-sm bg-surface">
                             <h4 className="mb-4">{t('sell_crypto')}</h4>
+
                             <div className="alert alert-info">
                                 💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
                             </div>
-                            {successMessage && <div className="alert alert-success">✅ {successMessage}</div>}
 
-                            <div className="row g-3">
+                            {successMessage && (
+                                <div className="alert alert-success d-flex align-items-center mt-3" role="alert">
+                                    ✅ {successMessage}
+                                </div>
+                            )}
+
+                            <div className="row g-3 mt-3">
                                 <div className="col-md-6">
                                     <label>{t('select_coin')}</label>
                                     <select className="form-select" value={coinId} onChange={(e) => setCoinId(e.target.value)}>
@@ -172,16 +176,18 @@ const Sell = () => {
                                         ))}
                                     </select>
                                 </div>
+
                                 <div className="col-md-6">
                                     <label>{t('amount')}</label>
-                                    <input className="form-control" type="number" step="0.0001" placeholder="0.00" value={coinAmount} onChange={(e) => {
-                                        const value = parseFloat(e.target.value);
-                                        if (isNaN(value) || value < 0) {
-                                            setCoinAmount('0');
-                                        } else {
-                                            setCoinAmount(e.target.value);
-                                        }
-                                    }} />
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="0.00"
+                                        value={coinAmount}
+                                        onChange={(e) => setCoinAmount(e.target.value)}
+                                    />
                                 </div>
                             </div>
 
@@ -192,32 +198,23 @@ const Sell = () => {
                             )}
 
                             <div className="d-flex justify-content-end gap-2 mt-4">
-                                <button className="btn btn-outline-primary rounded-5" onClick={addToCart}>{t('add_to_cart')}</button>
-                                <button className="btn btn-primary rounded-5 text-white" onClick={handleSellAll} disabled={cart.length === 0}>{t('sell_now')}</button>
+                                <button
+                                    className="btn btn-primary rounded-5 text-white"
+                                    onClick={handleSell}
+                                    disabled={!coinId || !coinAmount}
+                                >
+                                    {t('sell_now')}
+                                </button>
                             </div>
-
-                            {cart.length > 0 && (
-                                <div className="mt-5">
-                                    <h5>{t('cart')}</h5>
-                                    <ul className="list-group">
-                                        {cart.map((item, idx) => (
-                                            <li key={idx} className="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>{item.amount.toFixed(4)} {item.symbol} = ${(item.amount * item.price).toFixed(2)} USD</span>
-                                                <button onClick={() => removeFromCart(idx)} className="btn btn-sm btn-outline-danger">✖</button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
 
                             {walletCoins.length > 0 && (
                                 <div className="mt-5">
-                                    <h5>{t('sellable_coins')}</h5>
+                                    <h5>{t('your_coins')}</h5>
                                     <ul className="list-group">
                                         {walletCoins.map((coin) => (
                                             <li key={coin.id} className="list-group-item d-flex justify-content-between">
-                                                <span>{coin.name} ({coin.symbol.toUpperCase()})</span>
-                                                <span>{parseFloat(coin.amount.toFixed(4))} × ${coin.quote.USD.price.toFixed(2)} = ${(coin.amount * coin.quote.USD.price).toFixed(2)} USD</span>
+                                                <span><strong>{coin.name} ({coin.symbol.toUpperCase()})</strong></span>
+                                                <span>{parseFloat(coin.amount.toFixed(4))} × ${coin.quote.USD.price.toFixed(2)} = <strong>${(coin.amount * coin.quote.USD.price).toFixed(2)}</strong></span>
                                             </li>
                                         ))}
                                     </ul>
@@ -227,6 +224,7 @@ const Sell = () => {
                     </div>
                 </div>
             </div>
+
             <PageContainer bgColor="bg-foto">
                 <EarnUp />
             </PageContainer>
