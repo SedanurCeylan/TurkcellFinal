@@ -237,5 +237,12 @@
     "about_text2": "You can check out my project on GitHub:",
     "market_page_result": "results found",
     "market_page_no_result": "No results found",
-    "search_placeholder": "Search coin..."
+    "search_placeholder": "Search coin...",
+    "amount_coin": "Amount of Coin to Buy",
+    "add_to_cart": "Add to Cart",
+    "checkout": "Checkout",
+    "cart": "Cart",
+    "cart_empty": "Cart is empty",
+    "purchase_success": "Purchase completed successfully!",
+    "sellable_coins": "Sellable Coins"
 }

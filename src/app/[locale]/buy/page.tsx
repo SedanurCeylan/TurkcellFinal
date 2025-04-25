@@ -13,86 +13,88 @@ import { fetchCoins } from '@/lib/coinApi';
 import { Coin } from '../../../types/route';
 import Navbar from '../../../components/Navbar';
 
-
 const Buy = () => {
     const t = useTranslations();
     const [coinList, setCoinList] = useState<Coin[]>([]);
     const [coinId, setCoinId] = useState('');
-    const [amount, setAmount] = useState('');
+    const [coinAmount, setCoinAmount] = useState('');
     const [balance, setBalance] = useState(0);
     const [uid, setUid] = useState('');
-    const [calculatedAmount, setCalculatedAmount] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [cart, setCart] = useState<{ id: string; name: string; symbol: string; amount: number; pricePerCoin: number }[]>([]);
     const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         const fetchUserAndCoins = async () => {
             const currentUser = auth.currentUser;
             if (!currentUser) return;
-
             setUid(currentUser.uid);
-
             const docRef = doc(db, 'users', currentUser.uid);
             const snap = await getDoc(docRef);
             if (snap.exists()) setBalance(snap.data().balance || 0);
-
             const coins = await fetchCoins(20);
             setCoinList(coins);
         };
-
         fetchUserAndCoins();
     }, []);
 
     useEffect(() => {
         const selectedCoin = coinList.find(c => String(c.id) === coinId);
-        const usd = parseFloat(amount);
-        if (selectedCoin && !isNaN(usd) && usd > 0) {
-            const result = usd / selectedCoin.quote.USD.price;
-            setCalculatedAmount(Number(result.toFixed(6)));
+        const amountNum = parseFloat(coinAmount);
+        if (selectedCoin && !isNaN(amountNum) && amountNum > 0) {
+            setTotalPrice(amountNum * selectedCoin.quote.USD.price);
         } else {
-            setCalculatedAmount(0);
+            setTotalPrice(0);
         }
-    }, [coinId, amount, coinList]);
+    }, [coinId, coinAmount, coinList]);
 
-    const handleBuy = async () => {
-        if (!coinId || !amount) return alert(t('fill_all_fields'));
+    const addToCart = () => {
+        if (!coinId || !coinAmount) return alert(t('fill_all_fields'));
+        const selectedCoin = coinList.find(c => String(c.id) === coinId);
+        if (!selectedCoin) return alert('Coin bulunamadı');
+        const amountNum = parseFloat(coinAmount);
+        if (isNaN(amountNum) || amountNum <= 0) return alert(t('invalid_amount'));
+        setCart(prev => [...prev, {
+            id: String(selectedCoin.id),
+            name: selectedCoin.name,
+            symbol: selectedCoin.symbol,
+            amount: amountNum,
+            pricePerCoin: selectedCoin.quote.USD.price
+        }]);
+        setCoinId('');
+        setCoinAmount('');
+        setTotalPrice(0);
+    };
 
-        const coinMeta = coinList.find(c => String(c.id) === coinId);
-        if (!coinMeta) return alert('Coin bulunamadı');
-
-        const price = coinMeta.quote?.USD?.price;
-        if (!price || isNaN(price)) return alert('Geçersiz coin fiyatı');
-
-        const totalCost = parseFloat(amount);
+    const handleCheckout = async () => {
+        if (cart.length === 0) return alert(t('cart_empty'));
+        const totalCost = cart.reduce((sum, item) => sum + (item.amount * item.pricePerCoin), 0);
         if (totalCost > balance) return alert(t('insufficient_balance'));
-        if (totalCost <= 0) return alert(t('invalid_amount'));
-
-        const coinAmount = totalCost / price;
-
         const userRef = doc(db, 'users', uid);
         const snap = await getDoc(userRef);
         const userData = snap.data();
         const wallet = userData?.wallet || {};
 
-        if (wallet[coinId]) {
-            wallet[coinId].amount += coinAmount;
-        } else {
-            wallet[coinId] = {
-                amount: coinAmount,
-                priceAtPurchase: price,
-            };
-        }
+        cart.forEach(item => {
+            if (wallet[item.id]) {
+                wallet[item.id].amount += item.amount;
+            } else {
+                wallet[item.id] = {
+                    amount: item.amount,
+                    priceAtPurchase: item.pricePerCoin
+                };
+            }
+        });
 
         await updateDoc(userRef, {
             balance: Number((balance - totalCost).toFixed(2)),
-            wallet,
+            wallet
         });
 
         setBalance(prev => prev - totalCost);
-        setSuccessMessage(`${t('buy_success')} ${coinAmount.toFixed(6)} ${coinMeta.symbol}`);
+        setCart([]);
+        setSuccessMessage(t('purchase_success'));
         setTimeout(() => setSuccessMessage(''), 4000);
-        setAmount('');
-        setCoinId('');
-        setCalculatedAmount(0);
     };
 
     return (
@@ -121,11 +123,9 @@ const Buy = () => {
                     <div className="col-md-9 border-start ps-4">
                         <div className="rounded-4 p-4 shadow-sm bg-surface">
                             <h4 className="mb-4">{t('buy_crypto')}</h4>
-
                             <div className="alert alert-info">
                                 💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
                             </div>
-
                             {successMessage && (
                                 <div className="alert alert-success">✅ {successMessage}</div>
                             )}
@@ -143,23 +143,55 @@ const Buy = () => {
                                     </select>
                                 </div>
                                 <div className="col-md-6">
-                                    <label>{t('amount')}</label>
-                                    <input className="form-control" type="number" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                                    <label>{t('amount_coin')}</label>
+                                    <input
+                                        className="form-control"
+                                        type="number"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                        value={coinAmount}
+                                        onChange={(e) => {
+                                            const value = parseFloat(e.target.value);
+                                            if (isNaN(value) || value < 0) {
+                                                setCoinAmount('0');
+                                            } else {
+                                                setCoinAmount(e.target.value);
+                                            }
+                                        }}
+                                    />
+
                                 </div>
                             </div>
 
-                            {calculatedAmount > 0 && (
+                            {totalPrice > 0 && (
                                 <div className="mt-3 text-success">
-                                    <p><strong>{t('you_will_receive')}:</strong> {calculatedAmount} {coinList.find(c => String(c.id) === coinId)?.symbol}</p>
-                                    <p><strong>{t('total_payment')}:</strong> ${parseFloat(amount).toFixed(2)}</p>
+                                    <p><strong>{t('total_payment')}:</strong> ${totalPrice.toFixed(2)}</p>
                                 </div>
                             )}
 
-                            <div className="d-flex justify-content-end mt-4">
-                                <button className="btn btn-primary rounded-5 text-white" onClick={handleBuy}>
-                                    {t('buy_now')}
+                            <div className="d-flex justify-content-end gap-2 mt-4">
+                                <button className="btn btn-outline-primary rounded-5" onClick={addToCart}>{t('add_to_cart')}</button>
+                                <button
+                                    className="btn btn-primary rounded-5 text-white"
+                                    onClick={handleCheckout}
+                                    disabled={cart.length === 0}
+                                >
+                                    {t('checkout')}
                                 </button>
                             </div>
+
+                            {cart.length > 0 && (
+                                <div className="mt-5">
+                                    <h5>{t('cart')}</h5>
+                                    <ul className="list-group">
+                                        {cart.map((item, idx) => (
+                                            <li key={idx} className="list-group-item d-flex justify-content-between">
+                                                {item.amount} {item.symbol} = ${(item.amount * item.pricePerCoin).toFixed(2)}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

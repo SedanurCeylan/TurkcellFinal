@@ -236,5 +236,12 @@
     "about_text2": "Github Üzerinden Projemi İnceleyebilirsiniz:",
     "market_page_result": "sonuç bulundu",
     "market_page_no_result": "Sonuç bulunamadı",
-    "search_placeholder": "Coin ara..."
+    "search_placeholder": "Coin ara...",
+    "amount_coin": "Almak İstediğiniz Coin Miktarı",
+    "add_to_cart": "Sepete Ekle",
+    "checkout": "Ödeme Yap",
+    "cart": "Sepet",
+    "cart_empty": "Sepet boş",
+    "purchase_success": "Satın alma işlemi başarıyla tamamlandı!",
+    "sellable_coins": "Satılabilir Coinler"
 }
