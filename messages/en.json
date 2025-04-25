@@ -244,5 +244,10 @@
     "cart": "Cart",
     "cart_empty": "Cart is empty",
     "purchase_success": "Purchase completed successfully!",
-    "sellable_coins": "Sellable Coins"
+    "sellable_coins": "Sellable Coins",
+    "wallet_title": "Wallet",
+    "your_coins": "Your Wallet Coins",
+    "wallet_page_title": "Wallet",
+    "no_coins": "No coins in your wallet yet.",
+    "wallet_page_breadcrumb": "Home / Wallet"
 }

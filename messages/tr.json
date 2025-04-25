@@ -243,5 +243,10 @@
     "cart": "Sepet",
     "cart_empty": "Sepet boş",
     "purchase_success": "Satın alma işlemi başarıyla tamamlandı!",
-    "sellable_coins": "Satılabilir Coinler"
+    "sellable_coins": "Satılabilir Coinler",
+    "wallet_title": "Cüzdan",
+    "your_coins": "Cüzdanınızdaki Coinler",
+    "wallet_page_title": "Cüzdan",
+    "no_coins": "Cüzdanınızda henüz coin bulunmuyor.",
+    "wallet_page_breadcrumb": "Anasayfa / Cüzdan"
 }

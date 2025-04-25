@@ -16,6 +16,7 @@ const Navbar = () => {
   const router = useRouter();
   const currentLocale = useLocale();
 
+
   const [nickname, setNickname] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
@@ -81,6 +82,7 @@ const Navbar = () => {
                 {t('nav_buy')}
               </a>
               <ul className="dropdown-menu">
+                <li><Link className="dropdown-item" href="/wallet">{t('Overview')}</Link></li>
                 <li><Link className="dropdown-item" href="/buy">{t('buy_cripto')}</Link></li>
                 <li><Link className="dropdown-item" href="/sell">{t('sell_cripto')}</Link></li>
               </ul>
@@ -165,9 +167,13 @@ const Navbar = () => {
               <i className="fas fa-star text-warning"></i>
             </Link>
 
-            <button className="btn btn-outline-dark rounded-pill px-3 d-none d-lg-block">
+            <button
+              className="btn btn-outline-dark rounded-pill px-3 d-none d-lg-block"
+              onClick={() => router.push('/wallet')}
+            >
               {t('nav_wallet')}
             </button>
+
 
             <div className="dropdown">
               <a className="d-flex align-items-center nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">

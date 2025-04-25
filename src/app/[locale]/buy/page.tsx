@@ -109,7 +109,9 @@ const Buy = () => {
                     <div className="col-md-3">
                         <div className="rounded-4 px-4 py-3 bg-light">
                             <ul className="list-group list-group-flush gap-2">
-                                <li className="list-group-item border-0 ps-3">{t('Overview')}</li>
+                                <li className="list-group-item border-0 ps-3">
+                                    <Link href="/wallet" className="text-black text-decoration-none d-block">{t('Overview')}</Link>
+                                </li>
                                 <li className="list-group-item border-0 ps-3 bg-primary rounded-5 text-white">
                                     <Link href="/buy" className="text-white text-decoration-none d-block">{t('buy_page_title')}</Link>
                                 </li>
