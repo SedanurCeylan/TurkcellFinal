@@ -46,7 +46,6 @@ const Contact = () => {
 
                             <ul className="mt-3 mb-4">
                                 <li>{t('email_contact')}: sdnrcyln2@gmail.com</li>
-                                <li>{t('phone_contact')}: +90 507 527 35 25</li>
                             </ul>
 
                             <div className="d-flex gap-3 mt-4">
