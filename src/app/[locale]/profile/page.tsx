@@ -20,6 +20,24 @@ const Profile = () => {
     const t = useTranslations();
 
     useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const docRef = doc(db, 'users', user.uid);
+                const snap = await getDoc(docRef);
+
+                if (snap.exists()) {
+                    setUserData({
+                        ...snap.data(),
+                        email: user.email ?? '',
+                    } as UserData);
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
         const fetchUserData = async () => {
             const currentUser = auth.currentUser;
             if (!currentUser) return;
@@ -61,7 +79,7 @@ const Profile = () => {
         }
     };
 
-    if (!userData) return <p>Loading...</p>;
+    if (!userData) return <p className='text-center fs-1 my-10 py-10'>Loading...</p>;
 
     return (
         <section className='mb-3'>
@@ -72,7 +90,6 @@ const Profile = () => {
 
             <div className="container">
                 <div className="row">
-                    {/* Sol Menü */}
                     <div className="col-md-3">
                         <div className="rounded-4 px-4">
                             <div className="text-center mb-3">
@@ -80,29 +97,34 @@ const Profile = () => {
                                 <p className="fw-semibold mt-2">{userData.email}</p>
                             </div>
                             <ul className="list-group list-group-flush gap-3 fw-bold">
-                                <li className="list-group-item border-0 ps-4 bg-primary rounded-5 text-white">
-                                    <i className="fa-regular fa-user fs-3"></i> {t('user_profile')}
+                                <li className="list-group-item border-0 ps-4 bg-primary rounded-5 text-white d-flex align-items-center gap-2">
+                                    <i className="fa-regular fa-user fs-4"></i>
+                                    {t('user_profile')}
                                 </li>
-                                <li className="list-group-item border-0 ps-4">
-                                    <i className="fa-regular fa-object-ungroup text-primary fs-3"></i> {t('referrals')}
+                                <li className="list-group-item border-0 ps-4 text-secondary d-flex align-items-center gap-2">
+                                    <i className="fa-regular fa-object-ungroup text-primary fs-4"></i>
+                                    {t('referrals')}
                                 </li>
-                                <li className="list-group-item border-0 ps-4">
-                                    <i className="fa-regular fa-life-ring text-primary fs-3"></i> {t('api_keys')}
+                                <li className="list-group-item border-0 ps-4 text-secondary d-flex align-items-center gap-2">
+                                    <i className="fa-regular fa-life-ring text-primary fs-4"></i>
+                                    {t('api_keys')}
                                 </li>
-                                <li className="list-group-item border-0 ps-4">
-                                    <i className="fa-solid fa-clock-rotate-left text-primary fs-3"></i> {t('login_history')}
+                                <li className="list-group-item border-0 ps-4 text-secondary d-flex align-items-center gap-2">
+                                    <i className="fa-solid fa-clock-rotate-left text-primary fs-4"></i>
+                                    {t('login_history')}
                                 </li>
-                                <li className="list-group-item border-0 ps-4">
-                                    <i className="fa-solid fa-barcode text-primary fs-3"></i> {t('two_fa')}
+                                <li className="list-group-item border-0 ps-4 text-secondary d-flex align-items-center gap-2">
+                                    <i className="fa-solid fa-barcode text-primary fs-4"></i>
+                                    {t('two_fa')}
                                 </li>
-                                <li className="list-group-item border-0 ps-4">
+
+                                {/* <li className="list-group-item border-0 ps-4">
                                     <i className="fa-solid fa-unlock-keyhole text-primary fs-3"></i> {t('change_password')}
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </div>
 
-                    {/* Sağ İçerik */}
                     <div className="col-md-9 border-start ps-4">
                         <div className="rounded-4 p-4">
                             <h1 className="mb-4">{t('user_profile')}</h1>
@@ -149,7 +171,14 @@ const Profile = () => {
                                         <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
                                     </div>
 
-                                    {/* Features */}
+                                    <div className="col-12">
+                                        <button type="submit" className="btn btn-primary rounded-5 py-2 px-3 text-white mt-3">
+                                            {t('change_password')}
+                                        </button>
+                                        {error && <p className="text-danger mt-2">{error}</p>}
+                                        {success && <p className="text-success mt-2">{success}</p>}
+                                    </div>
+
                                     <div className="container mt-5">
                                         <h4>{t('features')}</h4>
                                         <div className="row mt-4">
@@ -201,13 +230,7 @@ const Profile = () => {
                                         </div>
                                     </div>
 
-                                    <div className="col-12">
-                                        <button type="submit" className="btn btn-primary rounded-5 py-2 px-3 text-white mt-3">
-                                            {t('change_password')}
-                                        </button>
-                                        {error && <p className="text-danger mt-2">{error}</p>}
-                                        {success && <p className="text-success mt-2">{success}</p>}
-                                    </div>
+
                                 </Form>
                             </Formik>
                         </div>
