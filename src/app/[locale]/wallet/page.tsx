@@ -28,7 +28,7 @@ const Wallet = () => {
             const wallet = snap.data()?.wallet || {};
             setBalance(snap.data()?.balance || 0);
 
-            const coins = await fetchCoins();
+            const coins = await fetchCoins(100);
             const owned: OwnedCoin[] = coins
                 .filter((coin: Coin) => {
                     const walletItem = wallet[String(coin.id)];
@@ -55,10 +55,10 @@ const Wallet = () => {
                 <WalletHeader />
             </PageContainer>
 
-            <div className=" container mb-7 px-3 px-md-5 py-5">
+            <div className="container mb-7 px-3 px-md-5 py-5">
                 <div className="row gy-5">
                     <div className="col-12 col-md-3">
-                        <div className="rounded-4 px-4 py-3 bg-light">
+                        <div className="rounded-4 px-4 py-3">
                             <ul className="list-group list-group-flush gap-2">
                                 <li className="list-group-item border-0 ps-3 bg-primary rounded-5 text-white">
                                     <Link href="/wallet" className="text-white text-decoration-none d-block">{t('Overview')}</Link>
@@ -73,22 +73,46 @@ const Wallet = () => {
                         </div>
                     </div>
 
-                    <div className="col-12 col-md-9 border-start ps-4">
-                        <div className="alert alert-info">
-                            💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
+                    <div className="col-12 col-md-9 border-start bg-white ps-4">
+                        <div className="alert alert-light border shadow-sm rounded-4 d-flex align-items-center gap-2">
+                            💰 <strong className="me-2">{t('your_balance')}:</strong>
+                            <span className="fw-semibold text-primary">${balance.toFixed(2)}</span>
                         </div>
 
-                        <div className="rounded-4 p-4 shadow-sm bg-surface">
-                            <h4 className="mb-4">{t('your_coins')}</h4>
+                        <div className="rounded-4 p-4 shadow-sm bg-surface mt-4">
+                            <h4 className="mb-4 fw-semibold">{t('your_coins')}</h4>
+
                             {walletCoins.length > 0 ? (
-                                <ul className="list-group">
-                                    {walletCoins.map((coin) => (
-                                        <li key={coin.id} className="list-group-item d-flex justify-content-between">
-                                            <span>{coin.name} ({coin.symbol.toUpperCase()})</span>
-                                            <span>{parseFloat(coin.amount.toFixed(4))} × ${coin.quote.USD.price.toFixed(2)} = ${(coin.amount * coin.quote.USD.price).toFixed(2)} USD</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <div
+                                    style={{ maxHeight: '400px', overflowY: 'auto' }} // scroll istersen aç
+                                >
+                                    <ul className="list-group">
+                                        {walletCoins.map((coin) => (
+                                            <li
+                                                key={coin.id}
+                                                className="list-group-item d-flex justify-content-between align-items-center rounded-3 shadow-sm mb-3 px-3 py-3"
+                                            >
+                                                <div>
+                                                    <strong>{coin.name} ({coin.symbol.toUpperCase()})</strong>
+                                                    <div className="text-muted small">
+                                                        {parseFloat(coin.amount.toFixed(6))} × ${coin.quote.USD.price.toFixed(2)}
+                                                    </div>
+                                                </div>
+                                                <div className="text-end">
+                                                    <div className="fw-bold text-success mb-1">
+                                                        ${(coin.amount * coin.quote.USD.price).toFixed(2)} USD
+                                                    </div>
+                                                    <Link
+                                                        href={`/sell?coinId=${coin.id}`}
+                                                        className="btn btn-sm btn-outline-primary rounded-5"
+                                                    >
+                                                        {t('sell_now')}
+                                                    </Link>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             ) : (
                                 <p className="text-muted">{t('no_coins')}</p>
                             )}

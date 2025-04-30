@@ -54,7 +54,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg bg-white shadow-sm py-2 px-4 fixed-top">
+    <nav className="navbar navbar-expand-xxl bg-white shadow-sm py-2 px-4 fixed-top">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
           <Image src="/logo.svg" alt="Logo" width={32} height={32} />

@@ -12,6 +12,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { fetchCoins } from '@/lib/coinApi';
 import { Coin, OwnedCoin } from '../../../types/route';
 import Navbar from '../../../components/Navbar';
+import { useSearchParams } from 'next/navigation';
 
 const Sell = () => {
     const t = useTranslations();
@@ -24,6 +25,10 @@ const Sell = () => {
     const [totalUSD, setTotalUSD] = useState(0);
     const [successMessage, setSuccessMessage] = useState('');
 
+
+    const searchParams = useSearchParams();
+
+
     useEffect(() => {
         const fetchData = async () => {
             const user = auth.currentUser;
@@ -34,14 +39,16 @@ const Sell = () => {
             const snap = await getDoc(docRef);
             const wallet = snap.data()?.wallet || {};
             setBalance(snap.data()?.balance || 0);
-            const coins = await fetchCoins();
+
+            const coins = await fetchCoins(100);
             setCoinList(coins);
 
             const owned: OwnedCoin[] = coins
                 .filter((coin: Coin) => {
-                    const walletItem = wallet[String(coin.id)];
-                    return walletItem && walletItem.amount > 0;
+                    const item = wallet[String(coin.id)];
+                    return item && item.amount > 0;
                 })
+
                 .map((coin: Coin) => {
                     const walletItem = wallet[String(coin.id)];
                     return {
@@ -52,9 +59,14 @@ const Sell = () => {
                 });
 
             setWalletCoins(owned);
+
+            const coinIdFromUrl = searchParams.get('coinId');
+            if (coinIdFromUrl) setCoinId(coinIdFromUrl);
         };
+
         fetchData();
     }, []);
+
 
     useEffect(() => {
         const selectedCoin = coinList.find((c) => String(c.id) === coinId);
@@ -107,18 +119,17 @@ const Sell = () => {
         });
 
         setBalance(updatedBalance);
-        setWalletCoins(prev => prev.map(c => {
-            if (String(c.id) === coinId) {
-                return { ...c, amount: c.amount - amountNum };
-            }
-            return c;
-        }).filter(c => c.amount > 0));
+        setWalletCoins(prev =>
+            prev.map(c => {
+                if (String(c.id) === coinId) {
+                    return { ...c, amount: c.amount - amountNum };
+                }
+                return c;
+            }).filter(c => c.amount !== 0 || c.amount === 0) // Tüm coinler kalsın
+        );
 
         setSuccessMessage(`${t('sold_successfully')} $${sellValue.toFixed(2)}`);
-
-        setTimeout(() => {
-            setSuccessMessage('');
-        }, 4000);
+        setTimeout(() => setSuccessMessage(''), 4000);
 
         setCoinId('');
         setCoinAmount('');
@@ -135,7 +146,7 @@ const Sell = () => {
             <div className="container mb-7">
                 <div className="row">
                     <div className="col-md-3">
-                        <div className="rounded-4 px-4 py-3 bg-light">
+                        <div className="rounded-4 px-4 py-3">
                             <ul className="list-group list-group-flush gap-2">
                                 <li className="list-group-item border-0 ps-3">
                                     <Link href="/wallet" className="text-black text-decoration-none d-block">{t('Overview')}</Link>
@@ -152,35 +163,44 @@ const Sell = () => {
 
                     <div className="col-md-9 border-start ps-4">
                         <div className="rounded-4 p-4 shadow-sm bg-surface">
-                            <h4 className="mb-4">{t('sell_crypto')}</h4>
+                            <h4 className="mb-4 fw-semibold">{t('sell_crypto')}</h4>
 
-                            <div className="alert alert-info">
-                                💰 <strong>{t('your_balance')}:</strong> ${balance.toFixed(2)}
+                            <div className="alert alert-light bg-white border rounded-4 shadow-sm d-flex align-items-center gap-2">
+                                💰 <strong className="me-2">{t('your_balance')}:</strong>
+                                <span className="fw-semibold text-primary">${balance.toFixed(2)}</span>
                             </div>
 
                             {successMessage && (
-                                <div className="alert alert-success d-flex align-items-center mt-3" role="alert">
+                                <div className="alert alert-success d-flex align-items-center mt-3 rounded-4" role="alert">
                                     ✅ {successMessage}
                                 </div>
                             )}
 
-                            <div className="row g-3 mt-3">
+                            <div className="row g-4 mt-3 align-items-end">
                                 <div className="col-md-6">
-                                    <label>{t('select_coin')}</label>
-                                    <select className="form-select" value={coinId} onChange={(e) => setCoinId(e.target.value)}>
+                                    <label className="form-label fw-semibold">{t('select_coin')}</label>
+                                    <select
+                                        className="form-select rounded-4"
+                                        value={coinId}
+                                        onChange={(e) => setCoinId(e.target.value)}
+                                    >
                                         <option value="">{t('choose')}</option>
                                         {walletCoins.map((coin) => (
-                                            <option key={coin.id} value={String(coin.id)}>
-                                                {coin.name} ({coin.symbol.toUpperCase()}) - {parseFloat(coin.amount.toFixed(4))} {t('available')}
+                                            <option
+                                                key={coin.id}
+                                                value={String(coin.id)}
+                                                disabled={coin.amount <= 0}
+                                            >
+                                                {coin.name} ({coin.symbol.toUpperCase()}) – {parseFloat(coin.amount.toFixed(4))} {t('available')}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
 
                                 <div className="col-md-6">
-                                    <label>{t('amount')}</label>
+                                    <label className="form-label fw-semibold">{t('amount')}</label>
                                     <input
-                                        className="form-control"
+                                        className="form-control rounded-4"
                                         type="number"
                                         step="0.01"
                                         min="0"
@@ -189,37 +209,50 @@ const Sell = () => {
                                         onChange={(e) => setCoinAmount(e.target.value)}
                                     />
                                 </div>
-                            </div>
 
-                            {totalUSD > 0 && (
-                                <div className="mt-3 text-success">
-                                    <p><strong>{t('you_will_earn')}:</strong> ${totalUSD.toFixed(2)}</p>
+                                {totalUSD > 0 && (
+                                    <div className="col-12 text-success mt-2">
+                                        <p className="fw-semibold fs-5"><strong>{t('you_will_earn')}:</strong> ${totalUSD.toFixed(2)}</p>
+                                    </div>
+                                )}
+
+                                <div className="col-12 d-flex justify-content-end">
+                                    <button
+                                        className="btn btn-primary rounded-5 px-4 py-2 text-white"
+                                        onClick={handleSell}
+                                        disabled={!coinId || !coinAmount}
+                                    >
+                                        {t('sell_now')}
+                                    </button>
                                 </div>
-                            )}
-
-                            <div className="d-flex justify-content-end gap-2 mt-4">
-                                <button
-                                    className="btn btn-primary rounded-5 text-white"
-                                    onClick={handleSell}
-                                    disabled={!coinId || !coinAmount}
-                                >
-                                    {t('sell_now')}
-                                </button>
                             </div>
 
                             {walletCoins.length > 0 && (
                                 <div className="mt-5">
-                                    <h5>{t('your_coins')}</h5>
-                                    <ul className="list-group">
-                                        {walletCoins.map((coin) => (
-                                            <li key={coin.id} className="list-group-item d-flex justify-content-between">
-                                                <span><strong>{coin.name} ({coin.symbol.toUpperCase()})</strong></span>
-                                                <span>{parseFloat(coin.amount.toFixed(4))} × ${coin.quote.USD.price.toFixed(2)} = <strong>${(coin.amount * coin.quote.USD.price).toFixed(2)}</strong></span>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <h5 className="mb-4 fw-semibold">{t('your_coins')}</h5>
+                                    <div className="overflow-auto" style={{ maxHeight: '400px' }}>
+                                        <ul className="list-group">
+                                            {walletCoins.map((coin) => (
+                                                <li
+                                                    key={coin.id}
+                                                    className="list-group-item d-flex justify-content-between align-items-center"
+                                                >
+                                                    <div>
+                                                        <strong>{coin.name} ({coin.symbol.toUpperCase()})</strong>
+                                                        <div className="text-muted small">
+                                                            {parseFloat(coin.amount.toFixed(6))} × ${coin.quote.USD.price.toFixed(2)}
+                                                        </div>
+                                                    </div>
+                                                    <span className="fw-bold text-success">
+                                                        ${(coin.amount * coin.quote.USD.price).toFixed(2)}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </div>
                             )}
+
                         </div>
                     </div>
                 </div>

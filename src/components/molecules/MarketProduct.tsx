@@ -9,6 +9,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import withAuth from '@/utils/withAuth';
 import { getCoins } from '@/lib/coinApi';
 import { Coin } from '@/types/route';
+import Link from 'next/link';
 
 type SortKey = 'price' | 'change' | 'name';
 
@@ -222,9 +223,13 @@ const MarketProduct = () => {
                                     {coin.quote.USD.percent_change_24h.toFixed(2)}%
                                 </td>
                                 <td>
-                                    <button className="btn btn-outline-primary btn-sm">
+                                    <Link
+                                        href={`/buy?coinId=${coin.id}`}
+                                        className="btn btn-outline-primary btn-sm"
+                                    >
                                         {t('market_page_action')}
-                                    </button>
+                                    </Link>
+
                                 </td>
                             </tr>
                         ))}
