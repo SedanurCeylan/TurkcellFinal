@@ -82,7 +82,7 @@ const Profile = () => {
     if (!userData) return <p className='text-center fs-1 my-10 py-10'>Loading...</p>;
 
     return (
-        <section className='mb-3'>
+        <section>
             <Navbar />
             <PageContainer bgColor="bg-surface">
                 <ProfileHeader />
