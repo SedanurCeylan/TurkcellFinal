@@ -249,5 +249,7 @@
     "wallet_page_title": "Wallet",
     "no_coins": "No coins in your wallet yet.",
     "wallet_page_breadcrumb": "Home / Wallet",
-    "success": "Success"
+    "success": "Success",
+    "sort_by_name": "Sort by Name",
+    "sort_by_price": "Sort by Price"
 }

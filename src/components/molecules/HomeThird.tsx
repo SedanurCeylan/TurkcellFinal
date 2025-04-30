@@ -46,7 +46,7 @@ const HomeThird = () => {
                     </thead>
                     <tbody>
                         {coins.map((coin, index) => (
-                            <tr key={coin.id}>
+                            <tr key={coin.id} className='align-middle'>
                                 <td>{index + 1}</td>
                                 <td>
                                     <div className="d-flex align-items-center gap-2">
@@ -80,7 +80,7 @@ const HomeThird = () => {
                                     />
                                 </td>
                                 <td>
-                                    <button className="btn btn-outline-primary btn-sm">
+                                    <button className="btn btn-outline-primary btn-sm disabled">
                                         {t('market_trade')}
                                     </button>
                                 </td>

@@ -141,16 +141,17 @@ const Navbar = () => {
                 {t('nav_assets')}
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Assets</a></li>
+                <li><a className="dropdown-item disabled" href="#">Assets</a></li>
               </ul>
             </div>
 
             <div className="dropdown d-none d-lg-block">
-              <a className="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <a className="nav-link dropdown-toggle " href="#" data-bs-toggle="dropdown">
                 {t('nav_order')}
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Orders</a></li>
+                <li><a className="dropdown-item disabled" href="#">Orders</a></li>
+                <li><a className="dropdown-item disabled" href="#">Trades</a></li>
               </ul>
             </div>
 
@@ -159,7 +160,8 @@ const Navbar = () => {
                 EN/USD
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">TR/TRY</a></li>
+                <li><a className="dropdown-item disabled" href="#">TR/TRY</a></li>
+                <li><a className="dropdown-item disabled" href="#">EN/USD</a></li>
               </ul>
             </div>
 

@@ -153,11 +153,12 @@ const MarketProduct = () => {
                     <thead className="bg-light">
                         <tr>
                             <th></th>
-                            <th>#</th>
+                            <th >#</th>
                             <th
                                 role="button"
                                 onClick={() => handleSort('name')}
                                 style={{ cursor: 'pointer' }}
+                                className='text-start'
                             >
                                 {t('market_page_pair')}
                                 {renderArrow('name')}
